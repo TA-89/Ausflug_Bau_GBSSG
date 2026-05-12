@@ -32,6 +32,43 @@
 </head>
 <body>
 
+<!-- ============ WELCOME POPUP (nur beim 1. Besuch) ============ -->
+<div class="welcome-overlay" id="welcome-overlay">
+  <div class="welcome-card">
+    <div class="welcome-greeting">Willkommen <span>auf der Reise-Seite!</span></div>
+    <div class="welcome-sub">Kurz erklärt, wie sie funktioniert:</div>
+
+    <ol class="welcome-steps">
+      <li>
+        <div class="welcome-step-content">
+          <h5>Von oben nach unten</h5>
+          <p>Anreise → Donnerstag → Freitag → Samstag → Sonntag. Einfach durchscrollen.</p>
+        </div>
+      </li>
+      <li>
+        <div class="welcome-step-content">
+          <h5>Sticky Navigation</h5>
+          <p>Die Tabs oben bleiben sichtbar — klick auf einen Tag und du springst direkt hin.</p>
+        </div>
+      </li>
+      <li>
+        <div class="welcome-step-content">
+          <h5>📋 Programm-Übersicht</h5>
+          <p>Grüner Button oben links — alle Tage kompakt auf einer Seite.</p>
+        </div>
+      </li>
+      <li>
+        <div class="welcome-step-content">
+          <h5>Karten sind interaktiv</h5>
+          <p>Pins antippen für Infos & Navi-Link · „Wo bin ich?" · „Vollbild" für die ganze Karte.</p>
+        </div>
+      </li>
+    </ol>
+
+    <button class="welcome-close" id="welcome-close">Los geht's →</button>
+  </div>
+</div>
+
 <!-- ============ TOPBAR ============ -->
 <header class="topbar">
   <div class="topbar-inner">
@@ -264,6 +301,17 @@
     <div class="tours-intro">
       <p><strong>So funktioniert's:</strong> Klick auf die Pins für Details und Navigations-Link. Tour A führt durch die Architektur- und Kunst-Highlights. Tour B konzentriert sich auf Altstadt, Hausbrauereien und das Killepitsch-Erlebnis. Beide ~4 Stunden, beide enden gegen 18:30 — danach Pause im Hotel und Aufbruch zum Rheinturm.</p>
     </div>
+
+    <!-- Ausstellungs-Tipp -->
+    <a href="https://www.visitduesseldorf.de/storys/2026/01/21/aktuelle-ausstellungen-in-duesseldorf/" target="_blank" rel="noopener" class="exhibition-link">
+      <div class="exhibition-icon">🎨</div>
+      <div class="exhibition-content">
+        <div class="exhibition-label">Für Ausstellungsbegeisterte</div>
+        <h4>Aktuelle Ausstellungen in Düsseldorf</h4>
+        <p>Die offizielle Übersicht aller laufenden Sonderausstellungen in Düsseldorfer Museen und Sammlungen — wird regelmässig aktualisiert.</p>
+      </div>
+      <div class="exhibition-arrow">→</div>
+    </a>
 
     <!-- TOUR CARDS -->
     <div class="tours-grid">
@@ -725,61 +773,79 @@
       <div class="insider-card">
         <h4>Carlstadt — euer Quartier</h4>
         <p>Das Hotel liegt im denkmalgeschützten Bereich der <strong>Carlstadt von 1767</strong>, angelegt unter Kurfürst Carl Theodor als geplante Stadterweiterung. Strenges rechtwinkliges Raster zwischen Wallstraße, Breite- und Kasernenstraße — preußisches Stadtplanungs-Lehrbuch.</p>
+        <a class="insider-link" href="https://de.wikipedia.org/wiki/Carlstadt_(D%C3%BCsseldorf)" target="_blank" rel="noopener">ℹ️ Mehr zur Carlstadt</a>
       </div>
 
       <div class="insider-card">
         <h4>Mannesmann-Hochhaus</h4>
         <p>Auf eurem Weg zum Rheinturm. Architekten <strong>Egon Eiermann & Paul Schneider-Esleben, 1956–58</strong>. Zusammen mit dem Dreischeibenhaus eines der ersten modernen Hochhäuser Deutschlands. Generalunternehmer: Hochtief. Wirtschaftswunder-Architektur in Reinkultur.</p>
+        <a class="insider-link" href="https://de.wikipedia.org/wiki/Mannesmann-Hochhaus" target="_blank" rel="noopener">ℹ️ Mehr zum Mannesmann-Hochhaus</a>
       </div>
 
       <div class="insider-card">
         <h4>Kö-Bogen — Doppelpack</h4>
         <p>Kö-Bogen I (Daniel <strong>Libeskind 2013</strong>) und Kö-Bogen II (Christoph <strong>Ingenhoven</strong>). Letzteres hat die größte begrünte Fassade Europas — 30’000 Hainbuchen, 8&nbsp;km Hecke. Selbst wenn Geschäfte zu sind, lohnt sich der Blick.</p>
+        <a class="insider-link" href="https://de.wikipedia.org/wiki/K%C3%B6-Bogen" target="_blank" rel="noopener">ℹ️ Mehr zum Kö-Bogen</a>
       </div>
 
       <div class="insider-card">
         <h4>St. Lambertus — der schiefe Turm</h4>
         <p>Die Drehung im Spitzhelm ist <strong>kein Stilmittel, sondern Bauschaden</strong>: feuchtes Bauholz hat sich im Dachstuhl verzogen. Die Sage erzählt, der Teufel habe den Turm verdreht, weil eine unzüchtige Braut hier heiratete. Beide Versionen sind erlaubt.</p>
+        <a class="insider-link" href="https://de.wikipedia.org/wiki/St._Lambertus_(D%C3%BCsseldorf)" target="_blank" rel="noopener">ℹ️ Mehr zu St. Lambertus</a>
       </div>
 
       <div class="insider-card">
         <h4>Brauerei-Etikette Altbier</h4>
         <p>In allen Düsseldorfer Hausbrauereien schenkt der <strong>Köbes</strong> ungefragt nach. Schluss macht ihr durch <strong>Bierdeckel aufs Glas</strong>. Strichliste läuft auf dem Deckel. Auf Hochdeutsch zu bestellen ist akzeptiert, aber „En Alt, bidde!" macht Eindruck.</p>
+        <a class="insider-link" href="https://de.wikipedia.org/wiki/Altbier" target="_blank" rel="noopener">ℹ️ Mehr zum Altbier</a>
       </div>
 
       <div class="insider-card">
         <h4>Killepitsch — der rote Düsseldorfer</h4>
         <p>Kräuterlikör mit über <strong>90 Zutaten</strong>, 42 %, dunkelrot. Erfunden im Et Kabüffke von <strong>Hans Müller-Schlösser</strong>. Name kommt vom rheinischen „Killepitsch" für „kleiner Schluck". Funktioniert tatsächlich gut als Magenwärmer nach dem Altbier.</p>
+        <a class="insider-link" href="https://www.killepitsch.de/" target="_blank" rel="noopener">ℹ️ Mehr zu Killepitsch</a>
       </div>
 
       <div class="insider-card">
         <h4>Rheinturm-Lichtskulptur</h4>
         <p>Am Schaft eures Abendessen-Turms: <strong>„Zeitfeld" von Horst Baumann (1981)</strong> zeigt die Uhrzeit als Lichtsäule — galt offiziell als größte digitale Uhr der Welt. Beim Reingehen zum Qomo nach oben schauen.</p>
+        <a class="insider-link" href="https://de.wikipedia.org/wiki/Rheinturm_D%C3%BCsseldorf" target="_blank" rel="noopener">ℹ️ Mehr zum Rheinturm</a>
       </div>
 
       <div class="insider-card">
         <h4>Düsseldorf vs. Köln</h4>
         <p>Die <strong>Rivalität ist legendär</strong>: Altbier (DD) vs. Kölsch (CGN), Fortuna vs. FC, schwarz-weiß-rot vs. rot-weiß. Niemals in der einen Stadt das Bier der anderen bestellen — wird als Provokation aufgefasst (mit Augenzwinkern).</p>
+        <a class="insider-link" href="https://de.wikipedia.org/wiki/Rivalit%C3%A4t_zwischen_D%C3%BCsseldorf_und_K%C3%B6ln" target="_blank" rel="noopener">ℹ️ Mehr zur Rivalität</a>
       </div>
 
       <div class="insider-card">
         <h4>Kölner Dom in Zahlen</h4>
         <p><strong>Baubeginn 1248, fertiggestellt 1880.</strong> 632 Jahre Bauzeit. 157 m hoch, war damit 1880–1884 das höchste Gebäude der Welt. UNESCO-Welterbe seit 1996. Die Reliquien der Heiligen Drei Könige liegen im Goldschrein hinter dem Hauptaltar.</p>
+        <a class="insider-link" href="https://www.koelner-dom.de/" target="_blank" rel="noopener">ℹ️ Mehr zum Kölner Dom</a>
       </div>
 
       <div class="insider-card">
         <h4>Streetart Ehrenfeld</h4>
         <p>Köln-Ehrenfeld ist seit den 2010er Jahren — geprägt vom <strong>CityLeaks-Festival</strong> — eine der dichtesten Streetart-Zonen Deutschlands. Highlights rund um die Heliosstraße und den Bahnhof Ehrenfeld. Werke kommen und gehen, manche verschwinden über Nacht.</p>
+        <a class="insider-link" href="https://cityleaks.de/" target="_blank" rel="noopener">ℹ️ Mehr zu CityLeaks</a>
       </div>
 
       <div class="insider-card">
         <h4>Zeche Zollverein</h4>
         <p>Falls am Samstag dorthin: Die <strong>Doppelbock-Förderturm</strong>-Silhouette (Schacht XII) ist Wahrzeichen des gesamten Ruhrgebiets. Stillgelegt 1986, UNESCO seit 2001. Heute beherbergt das Areal das Ruhrmuseum, Designzentrum und SANAA-Bau der Folkwang-Schule.</p>
+        <a class="insider-link" href="https://www.zollverein.de/" target="_blank" rel="noopener">ℹ️ Mehr zur Zeche Zollverein</a>
       </div>
 
       <div class="insider-card">
         <h4>Vatertag — was zu erwarten ist</h4>
         <p>Männergruppen mit <strong>Bollerwagen</strong> auf Wanderung („Herrenpartie"), oft mit reichlich Bier. Rheinufer und Altstadt sind ab Mittag sehr lebendig. Stimmung meist gut, manchmal etwas wild. Kein Grund zur Sorge — einfach Teil des Lokalkolorits.</p>
+        <a class="insider-link" href="https://de.wikipedia.org/wiki/Vatertag#Deutschland" target="_blank" rel="noopener">ℹ️ Mehr zum Vatertag</a>
+      </div>
+
+      <div class="insider-card">
+        <h4>Aktuelle Ausstellungen</h4>
+        <p>Für die <strong>Ausstellungsbegeisterten</strong>: Düsseldorf hat eine dichte Museumslandschaft — K20, K21, Kunstpalast, NRW-Forum, Stadtmuseum und mehr. Die offizielle Stadt-Übersicht listet alle laufenden Sonderausstellungen und wird regelmässig aktualisiert.</p>
+        <a class="insider-link" href="https://www.visitduesseldorf.de/storys/2026/01/21/aktuelle-ausstellungen-in-duesseldorf/" target="_blank" rel="noopener">ℹ️ Aktuelle Ausstellungen in DD</a>
       </div>
 
     </div>

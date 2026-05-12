@@ -13,6 +13,40 @@
     });
   }
 
+  // ============ WELCOME POPUP (1. Besuch oder erste PWA-Nutzung) ============
+  var welcomeOverlay = document.getElementById('welcome-overlay');
+  var welcomeClose = document.getElementById('welcome-close');
+  var welcomeShownKey = 'gbs-reise-welcome-shown';
+  var isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  if (welcomeOverlay && !localStorage.getItem(welcomeShownKey)) {
+    // Kurze Verzögerung, damit erst die Seite kurz zu sehen ist
+    setTimeout(function() {
+      welcomeOverlay.classList.add('show');
+    }, isStandalone ? 600 : 1000);
+  }
+
+  function closeWelcome() {
+    if (welcomeOverlay) {
+      welcomeOverlay.classList.remove('show');
+      localStorage.setItem(welcomeShownKey, '1');
+    }
+  }
+
+  if (welcomeClose) welcomeClose.addEventListener('click', closeWelcome);
+  if (welcomeOverlay) {
+    // Klick auf den Hintergrund (nicht auf die Card) schliesst auch
+    welcomeOverlay.addEventListener('click', function(e) {
+      if (e.target === welcomeOverlay) closeWelcome();
+    });
+  }
+  // ESC schliesst Popup
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && welcomeOverlay && welcomeOverlay.classList.contains('show')) {
+      closeWelcome();
+    }
+  });
+
   // ============ PWA INSTALL BANNER ============
   // Android Chrome: zeigt "beforeinstallprompt"-Event, dann kann man den Install-Dialog auslösen.
   // iOS Safari: kein API, aber wir können einen freundlichen Hinweis anzeigen.
