@@ -59,10 +59,11 @@
   }
 
   // ============ KARTEN HELPERS ============
-  function createPin(type, number) {
+  function createPin(type, number, isMajor) {
+    var classes = 'pin-marker ' + type + (isMajor ? ' major' : '');
     return L.divIcon({
       className: '',
-      html: '<div class="pin-marker ' + type + '"><span>' + (number || '') + '</span></div>',
+      html: '<div class="' + classes + '"><span>' + (number || '') + '</span></div>',
       iconSize: [32, 42],
       iconAnchor: [16, 38],
       popupAnchor: [0, -38]
@@ -87,6 +88,9 @@
   }
 
   // ============ MAP FACTORY ============
+  // Erzeugt eine eigenständige Karte. Mehrere Karten parallel sind problemlos —
+  // jede hat ihren eigenen Scope für User-Marker und Locate-Button.
+  // major-Pins werden im Vollbild grösser angezeigt und im Vollbild-Auto-Zoom berücksichtigt.
   function buildMap(config) {
     var mapEl = document.getElementById(config.mapId);
     if (!mapEl) return;
@@ -106,11 +110,14 @@
       maxZoom: 19
     }).addTo(map);
 
+    var majorBounds = [];
     config.places.forEach(function(p) {
-      var marker = L.marker([p.lat, p.lng], { icon: createPin(p.type, p.num) }).addTo(map);
+      var marker = L.marker([p.lat, p.lng], { icon: createPin(p.type, p.num, p.major) }).addTo(map);
       marker.bindPopup(popup(p));
+      if (p.major) majorBounds.push([p.lat, p.lng]);
     });
 
+    // Geolocation pro Karte
     var userMarker = null;
     var accuracyCircle = null;
     var btn = document.getElementById(config.btnId);
@@ -167,26 +174,64 @@
       });
     }
 
+    // ============ VOLLBILD ============
+    // Karte merkt sich ihre normalen Bounds, im Vollbild zoomt sie auf die Major-Punkte
+    var wrap = document.getElementById(config.wrapId);
+    var fsBtn = wrap ? wrap.querySelector('.fullscreen-btn') : null;
+    if (fsBtn && wrap) {
+      var normalCenter = config.center;
+      var normalZoom = config.zoom;
+
+      fsBtn.addEventListener('click', function() {
+        var isFs = wrap.classList.toggle('fullscreen');
+        document.body.classList.toggle('has-fullscreen-map', isFs);
+
+        // Button-Label umschalten
+        var label = fsBtn.querySelector('span');
+        if (label) label.textContent = isFs ? 'Schliessen' : 'Vollbild';
+
+        // Map invalidieren (sonst rendert sie nur halb)
+        setTimeout(function() {
+          map.invalidateSize();
+          if (isFs && majorBounds.length > 0) {
+            // Auf die Hauptpunkte zoomen, mit Padding damit die Pins schön sichtbar sind
+            map.fitBounds(majorBounds, { padding: [80, 80], maxZoom: 15 });
+          } else if (!isFs) {
+            // Zurück zur Normalansicht
+            map.setView(normalCenter, normalZoom);
+          }
+        }, 50);
+      });
+
+      // ESC schliesst den Vollbild
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && wrap.classList.contains('fullscreen')) {
+          fsBtn.click();
+        }
+      });
+    }
+
     return map;
   }
 
   // ============ DÜSSELDORF KARTE ============
   buildMap({
     mapId: 'map-dd',
+    wrapId: 'map-dd-wrap',
     btnId: 'locate-dd',
     center: [51.2240, 6.7735],
     zoom: 14,
     places: [
-      { lat: 51.2224, lng: 6.77522, type:'reserved', name:'Hotel Ruby Luna ★',
+      { lat: 51.2224, lng: 6.77522, type:'reserved', name:'Hotel Ruby Luna ★', major: true,
         tag:'BASIS', desc:'Kasernenstr. 39, 40213. Euer Quartier mitten in der Carlstadt.', num:'★',
         link:'https://www.rubyhotels.com/de/hotels/duesseldorf/ruby-luna/' },
-      { lat: 51.2179423, lng: 6.7616801, type:'reserved', name:'Qomo · Rheinturm',
+      { lat: 51.2179423, lng: 6.7616801, type:'reserved', name:'Qomo · Rheinturm', major: true,
         tag:'Do 20:30 RESERVIERT', desc:'Asiatisches Fine Dining auf 172 m, rotierender Boden. Treffpunkt 20:15 vor dem Rheinturm.', num:'Q',
         link:'https://www.qomo-restaurant.de/' },
       { lat: 51.2161667, lng: 6.7572861, type:'reserved', name:'Medienhafen',
         tag:'Sa 11:30 PROGRAMM', desc:'Gehry-Bauten „Neuer Zollhof", WDR-Funkhaus, ehem. Industriehafen.', num:'M',
         link:'https://de.wikipedia.org/wiki/Medienhafen' },
-      { lat: 51.2215533, lng: 6.78528, type:'reserved', name:'Brauerei Schumacher',
+      { lat: 51.2215533, lng: 6.78528, type:'reserved', name:'Brauerei Schumacher', major: true,
         tag:'Sa 19:00 RESERVIERT', desc:'Oststr. 123. Älteste Altbier-Brauerei Düsseldorfs, 1838.', num:'S',
         link:'https://www.schumacher-alt.de/' },
 
@@ -230,14 +275,15 @@
   // ============ KÖLN KARTE (Tag) ============
   buildMap({
     mapId: 'map-cgn',
+    wrapId: 'map-cgn-wrap',
     btnId: 'locate-cgn',
     center: [50.9450, 6.9400],
     zoom: 13,
     places: [
-      { lat: 50.9430, lng: 6.9583, type:'point', name:'Köln Hauptbahnhof',
+      { lat: 50.9430, lng: 6.9583, type:'point', name:'Köln Hauptbahnhof', major: true,
         tag:'ANKUNFT ~10:25', desc:'Ankunft mit RE/RB von Düsseldorf. 2 Minuten Fußweg zum Dom.', num:'B',
         link:'https://www.bahnhof.de/koeln-hbf' },
-      { lat: 50.9413, lng: 6.9583, type:'reserved', name:'Kölner Dom',
+      { lat: 50.9413, lng: 6.9583, type:'reserved', name:'Kölner Dom', major: true,
         tag:'Fr 11:45 FÜHRUNG', desc:'UNESCO-Welterbe. Baubeginn 1248, Fertigstellung 1880. 157 m hoch.', num:'D',
         link:'https://www.koelner-dom.de/' },
       { lat: 50.9420, lng: 6.9560, type:'point', name:'Altstadt-Bereich (Lunch)',
@@ -246,7 +292,7 @@
       { lat: 50.9503, lng: 6.9144, type:'point', name:'Streetart Ehrenfeld',
         tag:'Fr Nm STREETART', desc:'Bahnhof Ehrenfeld und Heliosstraße. Geprägt vom CityLeaks-Festival.', num:'★',
         link:'https://cityleaks.de/' },
-      { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant",
+      { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant", major: true,
         tag:'Fr ab 18:00 RESERVIERT', desc:'Cäcilienstr. 28. Traditionsgaststätte. Kölsch vom Fass, rheinische Küche.', num:'T',
         link:'https://beidrtant.de/' }
     ]
@@ -255,20 +301,21 @@
   // ============ KÖLN NIGHTLIFE-KARTE ============
   buildMap({
     mapId: 'map-cgn-night',
+    wrapId: 'map-cgn-night-wrap',
     btnId: 'locate-cgn-night',
     center: [50.9385, 6.9450],
     zoom: 14,
     places: [
-      { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant",
+      { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant", major: true,
         tag:'AUSGANGSPUNKT', desc:'Ab hier startet ihr Richtung Nachtleben.', num:'T',
         link:'https://beidrtant.de/' },
-      { lat: 50.9355, lng: 6.9385, type:'nightlife', name:'Rudolfplatz / Friesenviertel',
+      { lat: 50.9355, lng: 6.9385, type:'nightlife', name:'Rudolfplatz / Friesenviertel', major: true,
         tag:'AUSGEHVIERTEL', desc:'Klassisches Ausgehviertel. Bars, Pubs, kleine Clubs entlang Friesenstraße.', num:'1',
         link:'https://de.wikipedia.org/wiki/Rudolfplatz_(K%C3%B6ln)' },
-      { lat: 50.9357, lng: 6.9433, type:'nightlife', name:'Belgisches Viertel',
+      { lat: 50.9357, lng: 6.9433, type:'nightlife', name:'Belgisches Viertel', major: true,
         tag:'HIPSTER & CRAFT', desc:'Brüsseler Platz und Umgebung. Craft Beer, Cocktailbars, Lieblings-Eckkneipen.', num:'2',
         link:'https://de.wikipedia.org/wiki/Belgisches_Viertel' },
-      { lat: 50.9332, lng: 6.9523, type:'nightlife', name:'Heumarkt / Alter Markt',
+      { lat: 50.9332, lng: 6.9523, type:'nightlife', name:'Heumarkt / Alter Markt', major: true,
         tag:'BRAUHÄUSER', desc:'Päffgen, Gaffel am Dom, Sünner im Walfisch — Kölsch direkt am Quell.', num:'3',
         link:'https://www.paeffgen-koelsch.de/' },
       { lat: 50.9268, lng: 6.9527, type:'nightlife', name:'Südstadt (Severinsviertel)',

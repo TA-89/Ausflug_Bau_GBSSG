@@ -150,13 +150,13 @@
 <!-- ============ STICKY NAV ============ -->
 <nav class="nav-sticky">
   <div class="nav-inner">
+    <a class="nav-link nav-link-primary" href="programm.html">📋 Programm-Übersicht</a>
     <a class="nav-link" href="#anreise">Anreise</a>
     <a class="nav-link" href="#donnerstag">Donnerstag</a>
     <a class="nav-link" href="#freitag">Freitag</a>
     <a class="nav-link" href="#samstag">Samstag</a>
     <a class="nav-link" href="#sonntag">Sonntag</a>
     <a class="nav-link" href="#insider">Insider</a>
-    <a class="nav-link" href="programm.html" style="background: var(--lime); color: var(--ink);">📋 Programm</a>
   </div>
 </nav>
 
@@ -237,13 +237,19 @@
     <p class="section-lead">Beide Touren dauern rund 4 Stunden und enden mit ausreichend Zeit zum Frischmachen vor dem Abendessen. Tour-Beginn empfohlen ab 14:30 — vorher noch in Ruhe ankommen, Lunch nehmen, Hotel beziehen. Die Gruppe trifft sich für den Abend am Rheinturm wieder.</p>
 
     <!-- KARTE DÜSSELDORF -->
-    <div class="map-wrap">
+    <div class="map-wrap" id="map-dd-wrap">
       <div class="map-header">
         <h3>Düsseldorf <span class="script-small">— deine Karte</span></h3>
-        <button class="locate-btn" id="locate-dd" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-          <span>Wo bin ich?</span>
-        </button>
+        <div class="map-header-actions">
+          <button class="locate-btn" id="locate-dd" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            <span>Wo bin ich?</span>
+          </button>
+          <button class="fullscreen-btn" data-map="map-dd-wrap" type="button" aria-label="Vollbild">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+            <span>Vollbild</span>
+          </button>
+        </div>
       </div>
       <div class="map" id="map-dd"></div>
       <div class="map-legend">
@@ -397,13 +403,19 @@
     <p class="section-lead">Mit dem Zug nach Köln. Vormittags Dom-Führung, mittags durch die Altstadt, nachmittags Streetart in Ehrenfeld, abends rheinisch im Brauhaus „Bei d'r Tant". Wer Lust auf mehr hat: drei Ausgehviertel-Tipps weiter unten.</p>
 
     <!-- KARTE KÖLN (Tag) -->
-    <div class="map-wrap">
+    <div class="map-wrap" id="map-cgn-wrap">
       <div class="map-header">
         <h3>Köln · Tag <span class="script-small">— deine Karte</span></h3>
-        <button class="locate-btn" id="locate-cgn" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-          <span>Wo bin ich?</span>
-        </button>
+        <div class="map-header-actions">
+          <button class="locate-btn" id="locate-cgn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            <span>Wo bin ich?</span>
+          </button>
+          <button class="fullscreen-btn" data-map="map-cgn-wrap" type="button" aria-label="Vollbild">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+            <span>Vollbild</span>
+          </button>
+        </div>
       </div>
       <div class="map" id="map-cgn"></div>
       <div class="map-legend">
@@ -468,13 +480,19 @@
     <p class="section-lead" style="margin-bottom: 1.5rem;">Wer nach „Bei d'r Tant" noch Lust auf einen Absacker oder mehr hat: vier Viertel im Vergleich, jedes mit eigenem Charakter. Letzter Zug nach Düsseldorf fährt nach Mitternacht alle 30 Min.</p>
 
     <!-- KARTE KÖLN NIGHTLIFE -->
-    <div class="map-wrap">
+    <div class="map-wrap" id="map-cgn-night-wrap">
       <div class="map-header">
         <h3>Köln · Nachtleben <span class="script-small">— Ausgehviertel</span></h3>
-        <button class="locate-btn" id="locate-cgn-night" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-          <span>Wo bin ich?</span>
-        </button>
+        <div class="map-header-actions">
+          <button class="locate-btn" id="locate-cgn-night" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+            <span>Wo bin ich?</span>
+          </button>
+          <button class="fullscreen-btn" data-map="map-cgn-night-wrap" type="button" aria-label="Vollbild">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+            <span>Vollbild</span>
+          </button>
+        </div>
       </div>
       <div class="map" id="map-cgn-night"></div>
       <div class="map-legend">
