@@ -6,10 +6,94 @@
 (function() {
   'use strict';
 
-  // ============ SERVICE WORKER REGISTRIEREN ============
+  // ============ SERVICE WORKER + AUTO-UPDATE ============
+  // Network-First-Strategie im Service Worker sorgt dafür, dass online immer die neueste Version geladen wird.
+  // Zusätzlich: Wenn eine neue Service-Worker-Version installiert wird, zeigen wir einen Update-Banner.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function() {
-      navigator.serviceWorker.register('service-worker.js').catch(function() {});
+      navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+        // Bei jedem Page-Load nach Updates suchen
+        registration.update();
+
+        // Auf neue Service-Worker-Installationen reagieren
+        registration.addEventListener('updatefound', function() {
+          var newWorker = registration.installing;
+          if (!newWorker) return;
+          newWorker.addEventListener('statechange', function() {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // Neue Version wartet → Update-Banner zeigen
+              showUpdateBanner(newWorker);
+            }
+          });
+        });
+      }).catch(function() {});
+
+      // Wenn der neue Service Worker übernimmt, Seite einmal neu laden
+      var reloadingForUpdate = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        if (reloadingForUpdate) return;
+        reloadingForUpdate = true;
+        window.location.reload();
+      });
+
+      // Stündlich nach Updates suchen (für lange offene Sessions, z.B. PWA im Hintergrund)
+      setInterval(function() {
+        navigator.serviceWorker.getRegistration().then(function(reg) {
+          if (reg) reg.update();
+        });
+      }, 60 * 60 * 1000);
+    });
+  }
+
+  function showUpdateBanner(worker) {
+    var banner = document.getElementById('update-banner');
+    var updateBtn = document.getElementById('update-btn');
+    if (!banner || !updateBtn) return;
+    banner.classList.add('show');
+    updateBtn.addEventListener('click', function() {
+      // Service Worker auffordern, sofort zu übernehmen
+      worker.postMessage({ type: 'SKIP_WAITING' });
+      banner.classList.remove('show');
+    }, { once: true });
+  }
+
+  // ============ HARD REFRESH BUTTON ============
+  // Leert den PWA-Cache und lädt die Seite frisch vom Server.
+  // Wichtig: Ohne Cache-Löschung würde die App-Version aus dem Service Worker geladen.
+  var refreshBtn = document.getElementById('refresh-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', function() {
+      refreshBtn.classList.add('spinning');
+
+      var clearCache = function() {
+        if ('caches' in window) {
+          return caches.keys().then(function(names) {
+            return Promise.all(names.map(function(n) { return caches.delete(n); }));
+          });
+        }
+        return Promise.resolve();
+      };
+
+      var unregisterSW = function() {
+        if ('serviceWorker' in navigator) {
+          return navigator.serviceWorker.getRegistrations().then(function(regs) {
+            return Promise.all(regs.map(function(r) { return r.unregister(); }));
+          });
+        }
+        return Promise.resolve();
+      };
+
+      // Cache leeren + Service Worker zurücksetzen, dann hart neuladen
+      Promise.all([clearCache(), unregisterSW()]).catch(function() {}).finally(function() {
+        // Cache-Buster-Parameter erzwingt Netzwerk-Anfrage
+        var url = window.location.pathname + '?reload=' + Date.now();
+        window.location.replace(url);
+      });
+
+      // Sicherheits-Fallback: falls Promise.finally nicht durchläuft, nach 2 Sek. hart reloaden
+      setTimeout(function() {
+        window.location.reload();
+      }, 2000);
     });
   }
 
