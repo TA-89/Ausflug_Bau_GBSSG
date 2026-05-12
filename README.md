@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Auffahrtsausflug · Düsseldorf & Köln · GBS Bauabteilung 2026</title>
+<meta name="description" content="Auffahrtsausflug GBS St.Gallen Bauabteilung, 14.–17. Mai 2026 — Düsseldorf & Köln. Programm, interaktive Karten, Touren-Vorschläge.">
+
+<link rel="icon" type="image/png" href="assets/gbs-logo.png">
+
+<!-- Schriften -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Leaflet (Karten) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<!-- Eigene Styles -->
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ============ TOPBAR ============ -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-title">
+      Auffahrtsausflug 2026
+      <small>GBS Bauabteilung · 14.–17. Mai</small>
+    </div>
+    <a href="https://gbssg.ch" target="_blank" rel="noopener" aria-label="GBS St.Gallen">
+      <img src="assets/gbs-logo.png" alt="GBS St.Gallen" class="gbs-logo-img">
+    </a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1 class="hero-title">
+      Düsseldorf
+      <span class="ampersand">&amp;</span>
+      <span class="koeln">Köln</span>
+    </h1>
+    <div class="hero-sub">„Einfach mal gemeinsam weg."</div>
+
+    <dl class="hero-meta-row">
+      <div class="hero-meta-item">
+        <dt>Reisedaten</dt>
+        <dd>14. – 17. Mai 2026</dd>
+      </div>
+      <div class="hero-meta-item">
+        <dt>Hotel</dt>
+        <dd>Ruby Luna, Carlstadt</dd>
+      </div>
+      <div class="hero-meta-item">
+        <dt>Gruppe</dt>
+        <dd>GBS Bauabteilung</dd>
+      </div>
+      <div class="hero-meta-item">
+        <dt>Anreise</dt>
+        <dd>Zug + Flug ab St.Gallen</dd>
+      </div>
+    </dl>
+
+    <div class="four-k">
+      <div class="four-k-num">4K</div>
+      <div class="four-k-list">
+        <span class="label">Was uns erwartet</span>
+        <span>Kultur · Kunst</span>
+        <span>Kulinarik · Kneipen</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Foto-Cluster (SVG-Illustrationen) -->
+  <div class="photo-cluster">
+    <div class="photo-circle p1">
+      <svg viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+        <rect width="130" height="130" fill="#94B8D0"/>
+        <rect x="58" y="20" width="14" height="90" fill="#1F3A56"/>
+        <circle cx="65" cy="38" r="12" fill="#1F3A56"/>
+        <rect x="61" y="14" width="8" height="10" fill="#1F3A56"/>
+        <line x1="65" y1="6" x2="65" y2="14" stroke="#1F3A56" stroke-width="2"/>
+        <circle cx="65" cy="4" r="2" fill="#D85647"/>
+        <ellipse cx="20" cy="60" rx="16" ry="6" fill="white" opacity="0.6"/>
+        <ellipse cx="105" cy="80" rx="20" ry="7" fill="white" opacity="0.6"/>
+        <rect x="0" y="110" width="130" height="20" fill="#1F3A56" opacity="0.4"/>
+      </svg>
+    </div>
+    <div class="photo-circle p2">
+      <svg viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+        <rect width="110" height="110" fill="#E58A3E"/>
+        <path d="M 35 30 L 35 85 Q 35 92 42 92 L 68 92 Q 75 92 75 85 L 75 30 Z" fill="#C99B47" opacity="0.7"/>
+        <path d="M 35 30 L 75 30 L 75 50 L 35 50 Z" fill="white" opacity="0.85"/>
+        <ellipse cx="55" cy="32" rx="20" ry="5" fill="white"/>
+        <ellipse cx="48" cy="28" rx="6" ry="3" fill="white"/>
+        <ellipse cx="62" cy="29" rx="5" ry="2.5" fill="white"/>
+        <path d="M 75 45 Q 92 45 92 60 Q 92 75 75 75" stroke="#C99B47" stroke-width="4" fill="none" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="photo-circle p3">
+      <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="domSky" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#94B8D0;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#C8DFEE;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <rect width="140" height="140" fill="url(#domSky)"/>
+        <path d="M 40 100 L 40 50 L 50 50 L 50 30 L 55 30 L 55 15 L 60 15 L 60 5 L 65 5 L 65 12 L 67 12 L 67 30 L 72 30 L 72 50 L 78 50 L 78 30 L 83 30 L 83 12 L 85 12 L 85 5 L 90 5 L 90 15 L 95 15 L 95 30 L 100 30 L 100 50 L 110 50 L 110 100 Z" fill="#1F3A56"/>
+        <polygon points="56,15 60,2 64,15" fill="#1F3A56"/>
+        <polygon points="86,15 90,2 94,15" fill="#1F3A56"/>
+        <rect x="60" y="60" width="3" height="8" fill="#C8DFEE" opacity="0.6"/>
+        <rect x="68" y="60" width="3" height="8" fill="#C8DFEE" opacity="0.6"/>
+        <rect x="78" y="60" width="3" height="8" fill="#C8DFEE" opacity="0.6"/>
+        <rect x="86" y="60" width="3" height="8" fill="#C8DFEE" opacity="0.6"/>
+        <rect x="0" y="115" width="140" height="25" fill="#1F3A56" opacity="0.5"/>
+      </svg>
+    </div>
+  </div>
+
+  <svg class="skyline" viewBox="0 0 1200 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 0 110 L 0 75 L 40 75 L 40 50 L 80 50 L 80 70 L 120 70 L 120 40 L 160 40 L 160 60 L 200 60 L 200 80 L 240 80 L 240 30 L 250 30 L 250 15 L 260 15 L 260 30 L 280 30 L 280 65 L 320 65 L 320 80 L 360 80 L 360 45 L 400 45 L 400 75 L 460 75 L 460 50 L 500 50 L 500 90 L 540 90 L 540 55 L 580 55 L 580 70 L 620 70 L 620 85 L 660 85 L 660 60 L 700 60 L 700 45 L 740 45 L 740 80 L 780 80 L 780 65 L 820 65 L 820 30 L 825 30 L 825 8 L 830 8 L 830 30 L 835 30 L 835 18 L 838 18 L 838 8 L 842 8 L 842 18 L 845 18 L 845 30 L 850 30 L 850 65 L 890 65 L 890 50 L 930 50 L 930 80 L 980 80 L 980 60 L 1020 60 L 1020 75 L 1060 75 L 1060 55 L 1100 55 L 1100 80 L 1150 80 L 1150 70 L 1200 70 L 1200 110 Z" fill="#1F3A56"/>
+  </svg>
+</section>
+
+<!-- ============ ALERT BANNER (dezenter) ============ -->
+<div class="alert-wrap">
+  <div class="alert">
+    <div class="alert-icon">!</div>
+    <div>
+      <h3>Donnerstag = Christi Himmelfahrt + Vatertag</h3>
+      <p>Gesetzlicher Feiertag in NRW. Geschäfte (auch Königsallee), Supermärkte und Carlsplatz-Markt sind geschlossen. Museen, Brauereien und Gastronomie sind offen, aber sehr voll. Mit Vatertags-Gruppen (Bollerwagen!) ist zu rechnen.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STICKY NAV ============ -->
+<nav class="nav-sticky">
+  <div class="nav-inner">
+    <a class="nav-link" href="#anreise">Anreise</a>
+    <a class="nav-link" href="#donnerstag">Donnerstag</a>
+    <a class="nav-link" href="#freitag">Freitag</a>
+    <a class="nav-link" href="#samstag">Samstag</a>
+    <a class="nav-link" href="#sonntag">Sonntag</a>
+    <a class="nav-link" href="#insider">Insider</a>
+  </div>
+</nav>
+
+<!-- ============ ANREISE ============ -->
+<section class="day" id="anreise">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-num">01</div>
+      <div class="day-title-block">
+        <div class="day-date">Do, 14. Mai · Anreise</div>
+        <div class="day-title">St.Gallen → Düsseldorf<small>via Zürich & Köln-Bonn</small></div>
+      </div>
+    </div>
+    <p class="section-lead">Früher Aufbruch in St.Gallen, kurzer Hopser nach Köln-Bonn, dann mit dem Zug nach Düsseldorf. Gegen Mittag im Hotel.</p>
+
+    <div class="timeline">
+      <div class="step">
+        <div class="step-time">05:00</div>
+        <div class="step-content">
+          <h4>Treffpunkt Bahnhof St.Gallen</h4>
+          <p>Bitte pünktlich erscheinen — Abfahrt nur 7 Minuten später</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">05:07</div>
+        <div class="step-content">
+          <h4>Abfahrt St.Gallen → Zürich Flughafen</h4>
+          <p>Gleis 1</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">08:05</div>
+        <div class="step-content">
+          <h4>Abflug Zürich → Köln/Bonn</h4>
+          <p>Ankunft 09:10</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">~10:00</div>
+        <div class="step-content">
+          <h4>Zug Köln/Bonn → Düsseldorf Hbf</h4>
+          <p>ca. 40 Min., danach Tram oder zu Fuß zum Hotel</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">~11:30</div>
+        <div class="step-content">
+          <h4>Check-in Hotel Ruby Luna</h4>
+          <p>Kasernenstr. 39, 40213 Düsseldorf · mitten in der Carlstadt, 5 Min. zur Altstadt</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weiter-Wegweiser -->
+    <div class="next-up">
+      <div class="next-up-arrow">↓</div>
+      <div class="next-up-content">
+        <div class="next-up-label">Als nächstes</div>
+        <h4>Donnerstag-Nachmittag in Düsseldorf</h4>
+        <p>Tour A oder Tour B — frei wählbar, beide enden am Rheinturm</p>
+      </div>
+      <a class="next-up-btn" href="#donnerstag">Weiter →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DONNERSTAG ============ -->
+<section class="day" id="donnerstag">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-num">02</div>
+      <div class="day-title-block">
+        <div class="day-date">Do, 14. Mai · Düsseldorf</div>
+        <div class="day-title">Tour A oder Tour B?<small>Nachmittag frei von 13:00 bis 19:30 — wähle deine Route</small></div>
+        <span class="day-tag">Christi Himmelfahrt</span>
+      </div>
+    </div>
+    <p class="section-lead">Beide Touren dauern rund 4 Stunden und enden mit ausreichend Zeit zum Frischmachen vor dem Abendessen. Tour-Beginn empfohlen ab 14:30 — vorher noch in Ruhe ankommen, Lunch nehmen, Hotel beziehen. Die Gruppe trifft sich für den Abend am Rheinturm wieder.</p>
+
+    <!-- KARTE DÜSSELDORF -->
+    <div class="map-wrap">
+      <div class="map-header">
+        <h3>Düsseldorf <span class="script-small">— deine Karte</span></h3>
+        <button class="locate-btn" id="locate-dd" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          <span>Wo bin ich?</span>
+        </button>
+      </div>
+      <div class="map" id="map-dd"></div>
+      <div class="map-legend">
+        <div class="legend-item"><span class="legend-pin reserved"></span>Reserviert / fix</div>
+        <div class="legend-item"><span class="legend-pin tour-a"></span>Tour A — Architektur & Kunst</div>
+        <div class="legend-item"><span class="legend-pin tour-b"></span>Tour B — Altstadt & Altbier</div>
+        <div class="legend-item"><span class="legend-pin point"></span>Allgemeiner Punkt</div>
+        <div class="legend-item"><span class="legend-pin you"></span>Dein Standort</div>
+      </div>
+    </div>
+
+    <div class="tours-intro">
+      <p><strong>So funktioniert's:</strong> Klick auf die Pins für Details und Navigations-Link. Tour A führt durch die Architektur- und Kunst-Highlights. Tour B konzentriert sich auf Altstadt, Hausbrauereien und das Killepitsch-Erlebnis. Beide ~4 Stunden, beide enden gegen 18:30 — danach Pause im Hotel und Aufbruch zum Rheinturm.</p>
+    </div>
+
+    <!-- TOUR CARDS -->
+    <div class="tours-grid">
+
+      <!-- TOUR A — 4h Version -->
+      <article class="tour-card a">
+        <div class="tour-header">
+          <div class="tour-label">Tour A</div>
+          <div class="tour-name">Architektur & Kunst</div>
+          <div class="tour-tagline">Bau, Geschichte, Moderne — für den Lehrer-Blick</div>
+        </div>
+        <div class="tour-body">
+          <div class="tour-stats">
+            <div class="stat"><div class="stat-val">~3 km</div><div class="stat-lbl">Distanz</div></div>
+            <div class="stat"><div class="stat-val">~4 h</div><div class="stat-lbl">Dauer</div></div>
+            <div class="stat"><div class="stat-val">5</div><div class="stat-lbl">Stationen</div></div>
+          </div>
+          <ol class="stop-list">
+            <li>
+              <span class="stop-time">14:30</span>
+              <span class="stop-detail"><strong>Schlossturm & Burgplatz</strong><em>13. Jh., 1552 von Alessandro Pasqualini aufgestockt — heute Schifffahrtsmuseum</em></span>
+            </li>
+            <li>
+              <span class="stop-time">15:00</span>
+              <span class="stop-detail"><strong>K20 Kunstsammlung NRW</strong><em>Schwarze Granitfassade von Dissing+Weitling. Picasso, Beuys, Klee. Sonntagsöffnungszeiten am Feiertag</em></span>
+            </li>
+            <li>
+              <span class="stop-time">16:30</span>
+              <span class="stop-detail"><strong>Kö-Bogen I + II</strong><em>Libeskind 2013 (geknickte Fassade) + Ingenhoven (größte begrünte Fassade Europas — 30’000 Hainbuchen, 8 km Hecke)</em></span>
+            </li>
+            <li>
+              <span class="stop-time">17:00</span>
+              <span class="stop-detail"><strong>Königsallee „Kö"</strong><em>Spaziergang dem Stadtgraben entlang. Vorbei am Dreischeibenhaus — Ikone der Nachkriegsmoderne</em></span>
+            </li>
+            <li>
+              <span class="stop-time">18:00</span>
+              <span class="stop-detail"><strong>Mannesmann-Hochhaus</strong><em>Eiermann & Schneider-Esleben, 1956–58. Eines der ersten modernen Hochhäuser Deutschlands. Direkt am Rhein</em></span>
+            </li>
+          </ol>
+        </div>
+      </article>
+
+      <!-- TOUR B — 4h Version -->
+      <article class="tour-card b">
+        <div class="tour-header">
+          <div class="tour-label">Tour B</div>
+          <div class="tour-name">Altstadt, Altbier & Killepitsch</div>
+          <div class="tour-tagline">Die längste Theke der Welt — gemütlich, gesellig</div>
+        </div>
+        <div class="tour-body">
+          <div class="tour-stats">
+            <div class="stat"><div class="stat-val">~2 km</div><div class="stat-lbl">Distanz</div></div>
+            <div class="stat"><div class="stat-val">~4 h</div><div class="stat-lbl">Dauer</div></div>
+            <div class="stat"><div class="stat-val">6</div><div class="stat-lbl">Stationen</div></div>
+          </div>
+          <ol class="stop-list">
+            <li>
+              <span class="stop-time">14:30</span>
+              <span class="stop-detail"><strong>Burgplatz & Stadterhebungsmonument</strong><em>Bronze-Skulptur von Bert Gerresheim mit 30+ Szenen Stadtgeschichte</em></span>
+            </li>
+            <li>
+              <span class="stop-time">14:45</span>
+              <span class="stop-detail"><strong>St. Lambertus</strong><em>Backsteingotik 1288, der berühmte verdrehte Spitzhelm — Bauschaden, keine Absicht</em></span>
+            </li>
+            <li>
+              <span class="stop-time">15:30</span>
+              <span class="stop-detail"><strong>Uerige</strong><em>Berger Str. 1. Altbier-Klassiker. Der Köbes schenkt nach, bis ihr den Deckel aufs Glas legt</em></span>
+            </li>
+            <li>
+              <span class="stop-time">16:30</span>
+              <span class="stop-detail"><strong>Et Kabüffke</strong><em>Flinger Str. 1. Winzige Kult-Stube, Heimat des roten Killepitsch (42 %). 6 Plätze drinnen</em></span>
+            </li>
+            <li>
+              <span class="stop-time">17:00</span>
+              <span class="stop-detail"><strong>Brauerei Füchschen</strong><em>Ratinger Str. 28. Etwas familiärer, gute rheinische Küche zur kleinen Stärkung</em></span>
+            </li>
+            <li>
+              <span class="stop-time">18:00</span>
+              <span class="stop-detail"><strong>Rheinuferpromenade</strong><em>1995 von Niklaus Fritschi gestaltet (autofrei). Schöner Spaziergang Richtung Hotel</em></span>
+            </li>
+          </ol>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- ABEND-FLOW Qomo -->
+    <h3 style="margin-top: 3rem; margin-bottom: 0.5rem; font-family: 'Caveat', cursive; font-size: 2.2rem; color: var(--ink); font-weight: 700;">Der Abend am Rheinturm</h3>
+
+    <div class="evening-flow">
+      <h4>So läuft der Abend</h4>
+      <div class="evening-steps">
+        <div class="evening-step"><strong>19:45</strong>Abmarsch Hotel</div>
+        <span class="evening-arrow">→</span>
+        <div class="evening-step"><strong>20:15</strong>Treffpunkt vor dem Rheinturm</div>
+        <span class="evening-arrow">→</span>
+        <div class="evening-step"><strong>20:30</strong>Essen beginnt im Qomo</div>
+      </div>
+    </div>
+
+    <!-- RESERVATION QOMO -->
+    <div class="reservation">
+      <h4>Abendessen Qomo</h4>
+      <p style="opacity: 0.78; font-size: 0.92rem;">Asiatisches Fine Dining auf 172 m im Rheinturm. Der rotierende Boden dreht sich einmal in 72 Min. um 360° — genau einmal über euer Essen.</p>
+      <div class="res-meta">
+        <div><strong>20:30 Uhr</strong>Beginn Abendessen</div>
+        <div><strong>20:15 Treffpunkt</strong>Eingang Rheinturm — für Direktankömmlinge</div>
+        <div><strong>Stromstr. 20</strong>40221 Düsseldorf</div>
+      </div>
+      <p class="res-note">Hinweis: Vatertag-Abend, Qomo ist erfahrungsgemäß voll. Dresscode leicht gehoben (smart casual).</p>
+    </div>
+
+    <!-- Weiter-Wegweiser -->
+    <div class="next-up">
+      <div class="next-up-arrow">↓</div>
+      <div class="next-up-content">
+        <div class="next-up-label">Als nächstes</div>
+        <h4>Freitag: Tagestrip nach Köln</h4>
+        <p>Dom-Führung, Streetart in Ehrenfeld, Abendessen bei d'r Tant</p>
+      </div>
+      <a class="next-up-btn" href="#freitag">Weiter →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FREITAG ============ -->
+<section class="day" id="freitag">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-num">03</div>
+      <div class="day-title-block">
+        <div class="day-date">Fr, 15. Mai · Köln</div>
+        <div class="day-title">Tagestrip Domstadt<small>Dom — Streetart — Brauhaus — Nachtleben</small></div>
+      </div>
+    </div>
+    <p class="section-lead">Mit dem Zug nach Köln. Vormittags Dom-Führung, mittags durch die Altstadt, nachmittags Streetart in Ehrenfeld, abends rheinisch im Brauhaus „Bei d'r Tant". Wer Lust auf mehr hat: drei Ausgehviertel-Tipps weiter unten.</p>
+
+    <!-- KARTE KÖLN (Tag) -->
+    <div class="map-wrap">
+      <div class="map-header">
+        <h3>Köln · Tag <span class="script-small">— deine Karte</span></h3>
+        <button class="locate-btn" id="locate-cgn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          <span>Wo bin ich?</span>
+        </button>
+      </div>
+      <div class="map" id="map-cgn"></div>
+      <div class="map-legend">
+        <div class="legend-item"><span class="legend-pin reserved"></span>Reserviert / fix</div>
+        <div class="legend-item"><span class="legend-pin point"></span>Programmpunkt</div>
+        <div class="legend-item"><span class="legend-pin you"></span>Dein Standort</div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="step">
+        <div class="step-time">~10:00</div>
+        <div class="step-content">
+          <h4>Abfahrt nach Köln</h4>
+          <p>Zug von Düsseldorf Hbf nach Köln Hbf (RE/RB, ca. 25 Min., alle 10–15 Min.)</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">11:45</div>
+        <div class="step-content">
+          <h4>Führung Kölner Dom</h4>
+          <p>UNESCO-Weltkulturerbe, gotische Architektur 1248–1880. Höchster Doppelturm der Welt bei Baubeginn. 1 Stunde Führung.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">~13:00</div>
+        <div class="step-content">
+          <h4>„Leckerle" in der Altstadt</h4>
+          <p>Kleiner Hunger zwischendurch — Halve Hahn, Reibekuchen, Mettbrötchen. Die Kölner Brauhaus-Klassiker rund um den Heumarkt.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">Nm.</div>
+        <div class="step-content">
+          <h4>Streetart-Führung mit Madeleine (freiwillig)</h4>
+          <p>Ca. 2 Stunden in Köln-Ehrenfeld. Heliosstraße, Bahnhof Ehrenfeld und Umgebung. Eine der dichtesten Streetart-Szenen Deutschlands — vom CityLeaks-Festival geprägt.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">ab 18:00</div>
+        <div class="step-content">
+          <h4>Abendessen „Bei d'r Tant"</h4>
+          <p>Cäcilienstr. 28. Traditionsgaststätte, kölsche Küche, Kölsch vom Fass. Reservation steht ✓</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESERVATION BEI DR TANT -->
+    <div class="reservation">
+      <h4>Bei d'r Tant</h4>
+      <p style="opacity: 0.78; font-size: 0.92rem;">Kölner Brauhaus mit ehrlichem rheinischem Essen und Reissdorf Kölsch. Köbes-Service — wer keinen Nachschub mehr will, legt den Bierdeckel aufs Glas.</p>
+      <div class="res-meta">
+        <div><strong>ab 18:00 Uhr</strong>Beginn Abendessen</div>
+        <div><strong>Cäcilienstr. 28</strong>50667 Köln</div>
+        <div><strong>+49 221 257 7360</strong>für Rückfragen</div>
+      </div>
+      <p class="res-note">Hinweis: Klassisch deftiges Menü. Wer nicht Fleisch isst, vorher Bescheid geben.</p>
+    </div>
+
+    <!-- KÖLN NACHT-TIPPS -->
+    <h3 style="margin-top: 4rem; margin-bottom: 0.5rem; font-family: 'Caveat', cursive; font-size: 2.4rem; color: var(--ink); font-weight: 700;">Nach dem Essen — Köln bei Nacht</h3>
+    <p class="section-lead" style="margin-bottom: 1.5rem;">Wer nach „Bei d'r Tant" noch Lust auf einen Absacker oder mehr hat: vier Viertel im Vergleich, jedes mit eigenem Charakter. Letzter Zug nach Düsseldorf fährt nach Mitternacht alle 30 Min.</p>
+
+    <!-- KARTE KÖLN NIGHTLIFE -->
+    <div class="map-wrap">
+      <div class="map-header">
+        <h3>Köln · Nachtleben <span class="script-small">— Ausgehviertel</span></h3>
+        <button class="locate-btn" id="locate-cgn-night" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          <span>Wo bin ich?</span>
+        </button>
+      </div>
+      <div class="map" id="map-cgn-night"></div>
+      <div class="map-legend">
+        <div class="legend-item"><span class="legend-pin reserved"></span>Bei d'r Tant (Start)</div>
+        <div class="legend-item"><span class="legend-pin nightlife"></span>Ausgehviertel</div>
+        <div class="legend-item"><span class="legend-pin you"></span>Dein Standort</div>
+      </div>
+    </div>
+
+    <div class="nightlife-grid">
+      <div class="nightlife-card">
+        <span class="nightlife-tag">Klassisch · Pub</span>
+        <h4>Rudolfplatz / Friesenviertel</h4>
+        <p>Klassisches Ausgehviertel mit hoher Bar-Dichte. Pubs, kleine Clubs, viele Studierende. Friesenstr. ist die zentrale Achse.</p>
+        <span class="area">~10 Min. zu Fuß</span>
+      </div>
+      <div class="nightlife-card">
+        <span class="nightlife-tag">Hipster · Craft</span>
+        <h4>Belgisches Viertel</h4>
+        <p>Brüsseler Platz und Umgebung. Craft Beer, Cocktailbars, Lieblings-Eckkneipen der lokalen Kreativen. Etwas erwachsener als Friesenviertel.</p>
+        <span class="area">~15 Min. zu Fuß</span>
+      </div>
+      <div class="nightlife-card">
+        <span class="nightlife-tag">Brauhaus · Tradition</span>
+        <h4>Heumarkt / Alter Markt</h4>
+        <p>Wenn Kölsch direkt am Quell: Päffgen, Gaffel am Dom, Sünner im Walfisch. Mitten in der Altstadt, gleich um die Ecke vom Tant.</p>
+        <span class="area">~5 Min. zu Fuß</span>
+      </div>
+      <div class="nightlife-card">
+        <span class="nightlife-tag">Gemütlich · Kult</span>
+        <h4>Südstadt / Severinsviertel</h4>
+        <p>Etwas südlicher, weniger touristisch. Hier liegt das legendäre Lommerzheim (Kult-Brauhaus, oft Schlange für Kotelett). Authentisch kölsch.</p>
+        <span class="area">~15 Min. zu Fuß / Tram</span>
+      </div>
+    </div>
+
+    <!-- Weiter-Wegweiser -->
+    <div class="next-up">
+      <div class="next-up-arrow">↓</div>
+      <div class="next-up-content">
+        <div class="next-up-label">Als nächstes</div>
+        <h4>Samstag: Medienhafen & freier Tag</h4>
+        <p>Gehry-Bauten am Vormittag, dann 6 Optionen zur Wahl, Abend im Schumacher</p>
+      </div>
+      <a class="next-up-btn" href="#samstag">Weiter →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SAMSTAG ============ -->
+<section class="day" id="samstag">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-num">04</div>
+      <div class="day-title-block">
+        <div class="day-date">Sa, 16. Mai · Düsseldorf</div>
+        <div class="day-title">Medienhafen & freier Tag<small>Gehry am Vormittag, dann sechs Optionen für den Nachmittag</small></div>
+      </div>
+    </div>
+    <p class="section-lead">Vormittags gemeinsamer Spaziergang durch den Medienhafen — ehemaliges Industriehafen-Gelände, heute Architektur-Highlight. Nachmittag frei. Abend im Schumacher.</p>
+
+    <div class="timeline">
+      <div class="step">
+        <div class="step-time">11:00</div>
+        <div class="step-content">
+          <h4>Abmarsch Hotel → Medienhafen</h4>
+          <p>Ca. 25 Min. zu Fuß, oder Tram</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">11:30</div>
+        <div class="step-content">
+          <h4>Besuch Medienhafen (1,5 Std.)</h4>
+          <p>Frank O. Gehry „Neuer Zollhof" (1999) — drei verformte Gebäude in Weiß, Edelstahl und Backsteinrot. Plus WDR-Funkhaus, Grand Bateau (Claude Vasconi), Sign (Helmut Jahn), Hyatt-Hotel. Reste des alten Handelshafens (Kräne, Speicher) im Kontrast.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 OPTIONEN -->
+    <h3 style="margin-top: 3rem; margin-bottom: 0.5rem; font-family: 'Caveat', cursive; font-size: 2.4rem; color: var(--ink); font-weight: 700;">Nachmittag — sechs Optionen</h3>
+    <p class="section-lead" style="margin-bottom: 1.5rem;">Splittergruppen sind okay. Mix von gemütlich-stadtnah bis ausgefallen-mit-ÖV.</p>
+
+    <div class="options-grid">
+
+      <div class="option-card">
+        <div class="option-icon">🚢</div>
+        <h4>Panorama-Schifffahrt</h4>
+        <p>1 Stunde auf dem Rhein, ab Anlegestelle Burgplatz. Schöner Blick auf Altstadt-Silhouette und Rheinturm.</p>
+        <div class="meta">CHF 20.– / Person</div>
+        <div class="meta-extra">↗ Anlegestelle Burgplatz · 5 Min. vom Hotel</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-icon">🍣</div>
+        <h4>Japanisches Viertel</h4>
+        <p>Immermannstr. & Klosterstr. — größte japanische Community Europas außerhalb von London. Authentisches Ramen, Onigiri, Bäckereien.</p>
+        <div class="meta">Essen ab ca. 12 €</div>
+        <div class="meta-extra">↗ 15 Min. vom Hotel zu Fuß</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-icon">🍺</div>
+        <h4>Brauhaustour</h4>
+        <p>Wer die Tour A am Donnerstag gewählt hat: jetzt die Altstadt nachholen. Uerige → Füchschen → Schlüssel, mit Killepitsch-Stop.</p>
+        <div class="meta">Längste Theke der Welt</div>
+        <div class="meta-extra">↗ Altstadt, 10 Min. vom Hotel</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-icon">🎨</div>
+        <h4>Kunstpalast oder K21</h4>
+        <p>Kunstpalast: klassische und moderne Sammlung im Ehrenhof. K21 (Ständehaus): Zeitgenössisches, mit Saraceno-Netzkonstruktion unter der Glaskuppel.</p>
+        <div class="meta">je 11–14 €</div>
+        <div class="meta-extra">↗ K21: 15 Min. zu Fuß · Kunstpalast: Tram U78/U79</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-icon">⚒️</div>
+        <h4>Zeche Zollverein, Essen</h4>
+        <p>UNESCO-Welterbe Industriearchitektur. Ehemalige Steinkohlenzeche, von Fritz Schupp und Martin Kremmer im Stil der „Neuen Sachlichkeit" geplant. Aussichtsplattform, Ruhrmuseum, Doppelbock-Förderturm.</p>
+        <div class="meta">Eintritt ab 12 € · Gelände frei</div>
+        <div class="meta-extra">↗ RE2 nach Essen Hbf + Tram 107 · ~45 Min.</div>
+      </div>
+
+      <div class="option-card">
+        <div class="option-icon">🏛️</div>
+        <h4>Schloss Benrath</h4>
+        <p>Spätbarockes Lustschloss von Nicolas de Pigage (1755–1773), für Kurfürst Carl Theodor. Rosa Fassade, perfekt erhaltene Schlossgärten, Museum für Europäische Gartenkunst.</p>
+        <div class="meta">Schlossticket ab 14 €</div>
+        <div class="meta-extra">↗ S6 oder Tram 701 · ~25 Min.</div>
+      </div>
+
+    </div>
+
+    <!-- RESERVATION SCHUMACHER -->
+    <div class="reservation">
+      <h4>Abendessen Brauerei Schumacher</h4>
+      <p style="opacity: 0.78; font-size: 0.92rem;">Älteste Altbier-Brauerei Düsseldorfs (1838). Originalstandort Oststraße. Traditionelles rheinisches Essen mit dem hauseigenen Schumacher Alt — etwas weniger bitter als Uerige.</p>
+      <div class="res-meta">
+        <div><strong>19:00 Uhr</strong>Beginn Abendessen</div>
+        <div><strong>Oststr. 123</strong>40210 Düsseldorf</div>
+        <div><strong>+49 211 828 9020</strong>für Rückfragen</div>
+      </div>
+      <p class="res-note">Hinweis: Ca. 20 Min. zu Fuß vom Hotel oder Tram.</p>
+    </div>
+
+    <!-- Weiter-Wegweiser -->
+    <div class="next-up">
+      <div class="next-up-arrow">↓</div>
+      <div class="next-up-content">
+        <div class="next-up-label">Als nächstes</div>
+        <h4>Sonntag: Rückreise</h4>
+        <p>Frühstück, Transfer, Flug nach Zürich</p>
+      </div>
+      <a class="next-up-btn" href="#sonntag">Weiter →</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ SONNTAG ============ -->
+<section class="day" id="sonntag">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-num">05</div>
+      <div class="day-title-block">
+        <div class="day-date">So, 17. Mai · Rückreise</div>
+        <div class="day-title">Düsseldorf → St.Gallen<small>Gemütlicher Morgen, dann ab nach Hause</small></div>
+      </div>
+    </div>
+    <p class="section-lead">Kein Hetzen — gemütliches Frühstück im Hotel, dann mit etwas Vorlauf zum Flughafen Düsseldorf.</p>
+
+    <div class="timeline">
+      <div class="step">
+        <div class="step-time">am</div>
+        <div class="step-content">
+          <h4>Gemütliches Frühstück</h4>
+          <p>Im Hotel Ruby Luna — die Brasserie hat ein gutes Buffet mit vielen veganen Optionen</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">~11:00</div>
+        <div class="step-content">
+          <h4>Abfahrt zum Flughafen Düsseldorf</h4>
+          <p>Ca. 30 Min. mit S-Bahn (S11 direkt zum Airport) oder Taxi</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">13:50</div>
+        <div class="step-content">
+          <h4>Abflug Düsseldorf → Zürich</h4>
+          <p>Ankunft Zürich 14:55</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-time">Nm.</div>
+        <div class="step-content">
+          <h4>Weiterreise Zürich → St.Gallen</h4>
+          <p>Mit der Bahn, Ankunft St.Gallen am späteren Nachmittag</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weiter-Wegweiser -->
+    <div class="next-up">
+      <div class="next-up-arrow">↓</div>
+      <div class="next-up-content">
+        <div class="next-up-label">Vor der Reise lesen</div>
+        <h4>Insider-Tipps & gut zu wissen</h4>
+        <p>Brauerei-Etikette, Geschichte, praktische Hinweise</p>
+      </div>
+      <a class="next-up-btn" href="#insider">Weiter →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSIDER ============ -->
+<section class="day insider-section" id="insider">
+  <div class="container">
+    <div class="day-header">
+      <div class="day-num">06</div>
+      <div class="day-title-block">
+        <div class="day-date">Insider · Praxis · Geschichte</div>
+        <div class="day-title">Gut zu wissen<small>Tipps für Bauberufler — und alle anderen</small></div>
+      </div>
+    </div>
+
+    <div class="insider-grid">
+
+      <div class="insider-card">
+        <h4>Carlstadt — euer Quartier</h4>
+        <p>Das Hotel liegt im denkmalgeschützten Bereich der <strong>Carlstadt von 1767</strong>, angelegt unter Kurfürst Carl Theodor als geplante Stadterweiterung. Strenges rechtwinkliges Raster zwischen Wallstraße, Breite- und Kasernenstraße — preußisches Stadtplanungs-Lehrbuch.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Mannesmann-Hochhaus</h4>
+        <p>Auf eurem Weg zum Rheinturm. Architekten <strong>Egon Eiermann & Paul Schneider-Esleben, 1956–58</strong>. Zusammen mit dem Dreischeibenhaus eines der ersten modernen Hochhäuser Deutschlands. Generalunternehmer: Hochtief. Wirtschaftswunder-Architektur in Reinkultur.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Kö-Bogen — Doppelpack</h4>
+        <p>Kö-Bogen I (Daniel <strong>Libeskind 2013</strong>) und Kö-Bogen II (Christoph <strong>Ingenhoven</strong>). Letzteres hat die größte begrünte Fassade Europas — 30’000 Hainbuchen, 8&nbsp;km Hecke. Selbst wenn Geschäfte zu sind, lohnt sich der Blick.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>St. Lambertus — der schiefe Turm</h4>
+        <p>Die Drehung im Spitzhelm ist <strong>kein Stilmittel, sondern Bauschaden</strong>: feuchtes Bauholz hat sich im Dachstuhl verzogen. Die Sage erzählt, der Teufel habe den Turm verdreht, weil eine unzüchtige Braut hier heiratete. Beide Versionen sind erlaubt.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Brauerei-Etikette Altbier</h4>
+        <p>In allen Düsseldorfer Hausbrauereien schenkt der <strong>Köbes</strong> ungefragt nach. Schluss macht ihr durch <strong>Bierdeckel aufs Glas</strong>. Strichliste läuft auf dem Deckel. Auf Hochdeutsch zu bestellen ist akzeptiert, aber „En Alt, bidde!" macht Eindruck.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Killepitsch — der rote Düsseldorfer</h4>
+        <p>Kräuterlikör mit über <strong>90 Zutaten</strong>, 42 %, dunkelrot. Erfunden im Et Kabüffke von <strong>Hans Müller-Schlösser</strong>. Name kommt vom rheinischen „Killepitsch" für „kleiner Schluck". Funktioniert tatsächlich gut als Magenwärmer nach dem Altbier.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Rheinturm-Lichtskulptur</h4>
+        <p>Am Schaft eures Abendessen-Turms: <strong>„Zeitfeld" von Horst Baumann (1981)</strong> zeigt die Uhrzeit als Lichtsäule — galt offiziell als größte digitale Uhr der Welt. Beim Reingehen zum Qomo nach oben schauen.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Düsseldorf vs. Köln</h4>
+        <p>Die <strong>Rivalität ist legendär</strong>: Altbier (DD) vs. Kölsch (CGN), Fortuna vs. FC, schwarz-weiß-rot vs. rot-weiß. Niemals in der einen Stadt das Bier der anderen bestellen — wird als Provokation aufgefasst (mit Augenzwinkern).</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Kölner Dom in Zahlen</h4>
+        <p><strong>Baubeginn 1248, fertiggestellt 1880.</strong> 632 Jahre Bauzeit. 157 m hoch, war damit 1880–1884 das höchste Gebäude der Welt. UNESCO-Welterbe seit 1996. Die Reliquien der Heiligen Drei Könige liegen im Goldschrein hinter dem Hauptaltar.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Streetart Ehrenfeld</h4>
+        <p>Köln-Ehrenfeld ist seit den 2010er Jahren — geprägt vom <strong>CityLeaks-Festival</strong> — eine der dichtesten Streetart-Zonen Deutschlands. Highlights rund um die Heliosstraße und den Bahnhof Ehrenfeld. Werke kommen und gehen, manche verschwinden über Nacht.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Zeche Zollverein</h4>
+        <p>Falls am Samstag dorthin: Die <strong>Doppelbock-Förderturm</strong>-Silhouette (Schacht XII) ist Wahrzeichen des gesamten Ruhrgebiets. Stillgelegt 1986, UNESCO seit 2001. Heute beherbergt das Areal das Ruhrmuseum, Designzentrum und SANAA-Bau der Folkwang-Schule.</p>
+      </div>
+
+      <div class="insider-card">
+        <h4>Vatertag — was zu erwarten ist</h4>
+        <p>Männergruppen mit <strong>Bollerwagen</strong> auf Wanderung („Herrenpartie"), oft mit reichlich Bier. Rheinufer und Altstadt sind ab Mittag sehr lebendig. Stimmung meist gut, manchmal etwas wild. Kein Grund zur Sorge — einfach Teil des Lokalkolorits.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="footer-script">Bis bald in Düsseldorf!</div>
+  <p><strong>GBS St.Gallen · Bauabteilung</strong></p>
+  <p>Auffahrtsausflug · 14. bis 17. Mai 2026</p>
+  <div class="mono-small">
+    Alle Angaben ohne Gewähr · Karten © OpenStreetMap-Mitwirkende, © CARTO
+  </div>
+</footer>
+
+<!-- Eigenes JavaScript -->
+<script src="script.js"></script>
+
+</body>
+</html>
