@@ -1,57 +1,204 @@
-# Auffahrtsausflug Düsseldorf & Köln 2026
+/* =========================================================
+   GBS Bauabteilung · Karten + Interaktion
+   Verwendet: Leaflet.js + OpenStreetMap (CARTO Voyager Tiles)
+   ========================================================= */
 
-Reise-Webseite für den Auffahrtsausflug der **GBS St.Gallen · Bauabteilung** vom **14. – 17. Mai 2026**.
+(function() {
+  'use strict';
 
-🔗 Live: `https://<dein-username>.github.io/<repo-name>/`
+  // ============ HELPERS ============
+  function createPin(type, number) {
+    return L.divIcon({
+      className: '',
+      html: '<div class="pin-marker ' + type + '"><span>' + (number || '') + '</span></div>',
+      iconSize: [32, 42],
+      iconAnchor: [16, 38],
+      popupAnchor: [0, -38]
+    });
+  }
 
----
+  function popup(tag, tagClass, name, desc, lat, lng) {
+    var url = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
+    return '<div class="popup">' +
+      '<span class="popup-tag ' + tagClass + '">' + tag + '</span>' +
+      '<h4>' + name + '</h4>' +
+      '<p>' + desc + '</p>' +
+      '<a href="' + url + '" target="_blank" rel="noopener">→ Navigieren via Google Maps</a>' +
+    '</div>';
+  }
 
-## 📁 Projektstruktur
+  // ============ MAP FACTORY ============
+  // Erzeugt eine eigenständige Karte für einen Container und eine Liste von Orten.
+  // Mehrere Karten auf der gleichen Seite sind problemlos möglich — jede hat ihren eigenen Scope.
+  function buildMap(config) {
+    var mapEl = document.getElementById(config.mapId);
+    if (!mapEl) return;
 
-```
-/
-├── index.html          # Hauptseite (alle Tage, Touren, Karten)
-├── styles.css          # Styles (Farben, Layout, Responsive)
-├── script.js           # Interaktive Karten (Leaflet) + Geolocation
-├── assets/
-│   └── gbs-logo.png    # GBS-Logo (für Header und Favicon)
-└── README.md           # Diese Datei
-```
+    var map = L.map(config.mapId, {
+      center: config.center,
+      zoom: config.zoom,
+      scrollWheelZoom: false
+    });
 
-## 🚀 Deployment auf GitHub Pages
+    // Scroll-Wheel-Zoom erst nach Klick aktivieren (sonst nervt's beim Scrollen)
+    map.on('click', function() { map.scrollWheelZoom.enable(); });
+    map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
 
-1. Repository auf GitHub anlegen (Public).
-2. Alle Dateien hochladen (inkl. Ordner `assets/`).
-3. **Settings → Pages → Source: `Deploy from a branch` · Branch: `main` · Folder: `/ (root)`**
-4. Nach 1–2 Minuten ist die Seite live unter `https://<username>.github.io/<repo>/`.
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OSM</a> · © <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
 
-> Wichtig: Die Geolocation („Wo bin ich?") funktioniert nur via **HTTPS**. GitHub Pages liefert automatisch HTTPS.
+    // Marker setzen
+    config.places.forEach(function(p) {
+      var marker = L.marker([p.lat, p.lng], { icon: createPin(p.type, p.num) }).addTo(map);
+      marker.bindPopup(popup(p.tag, p.type, p.name, p.desc, p.lat, p.lng));
+    });
 
-## ✏️ Inhalte ändern
+    // Geolocation-Button verbinden — eigener State pro Karte
+    var userMarker = null;
+    var accuracyCircle = null;
+    var btn = document.getElementById(config.btnId);
 
-- **Programmpunkte / Zeiten**: in `index.html` im jeweiligen `<section class="day">`-Block.
-- **Karten-Marker**: in `script.js` in den `places: [...]`-Arrays. Jeder Eintrag hat `lat`, `lng`, `type`, `name`, `tag`, `desc`, `num`.
-- **Farben**: in `styles.css` ganz oben unter `:root { --lime: ... }`.
+    if (btn) {
+      btn.addEventListener('click', function() {
+        if (!navigator.geolocation) {
+          alert('Geolokalisierung wird von deinem Browser nicht unterstützt.');
+          return;
+        }
+        btn.classList.add('active');
+        var btnLabel = btn.querySelector('span');
+        if (btnLabel) btnLabel.textContent = 'Suche...';
 
-Marker-Typen für die Karten:
-- `reserved` → rot (fix gebucht)
-- `tour-a` → orange (Tour A)
-- `tour-b` → violett (Tour B)
-- `point` → dunkelblau (allgemein)
-- `nightlife` → dunkelviolett (Ausgehviertel)
+        navigator.geolocation.getCurrentPosition(
+          function(pos) {
+            var lat = pos.coords.latitude;
+            var lng = pos.coords.longitude;
+            var accuracy = pos.coords.accuracy;
 
-## 🛠️ Technik
+            if (userMarker) map.removeLayer(userMarker);
+            if (accuracyCircle) map.removeLayer(accuracyCircle);
 
-- **Vanilla HTML/CSS/JS** — kein Build-Step nötig, einfach hochladen.
-- **Leaflet 1.9.4** (Karten) — geladen via unpkg CDN.
-- **OpenStreetMap + CARTO Voyager Tiles** — kostenlos, kein API-Key, DSGVO-freundlich.
-- **Google Fonts**: Caveat, Outfit, Manrope.
+            var youIcon = L.divIcon({
+              className: '',
+              html: '<div class="you-marker"></div>',
+              iconSize: [22, 22],
+              iconAnchor: [11, 11]
+            });
+            userMarker = L.marker([lat, lng], { icon: youIcon }).addTo(map);
+            userMarker.bindPopup('<div class="popup"><span class="popup-tag point">Du</span><h4>Dein Standort</h4><p>Genauigkeit: ±' + Math.round(accuracy) + ' m</p></div>');
+            accuracyCircle = L.circle([lat, lng], {
+              radius: accuracy,
+              color: '#94B8D0',
+              fillColor: '#94B8D0',
+              fillOpacity: 0.1,
+              weight: 1
+            }).addTo(map);
+            map.setView([lat, lng], 15);
 
-## 📝 Lizenz / Kredits
+            if (btnLabel) btnLabel.textContent = 'Standort aktualisiert';
+            setTimeout(function() {
+              if (btnLabel) btnLabel.textContent = 'Wo bin ich?';
+              btn.classList.remove('active');
+            }, 2500);
+          },
+          function(err) {
+            alert('Standort konnte nicht ermittelt werden.\n\nMögliche Ursachen:\n• Berechtigung verweigert\n• Kein GPS-Signal\n• Browser im Privat-Modus\n• Seite läuft nicht via HTTPS');
+            if (btnLabel) btnLabel.textContent = 'Wo bin ich?';
+            btn.classList.remove('active');
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      });
+    }
 
-- Kartenmaterial © [OpenStreetMap-Mitwirkende](https://www.openstreetmap.org/copyright) & © [CARTO](https://carto.com/attributions)
-- GBS-Logo: Eigentum der [GBS St.Gallen](https://gbssg.ch)
+    return map;
+  }
 
----
+  // ============ DÜSSELDORF KARTE ============
+  buildMap({
+    mapId: 'map-dd',
+    btnId: 'locate-dd',
+    center: [51.2240, 6.7735],
+    zoom: 14,
+    places: [
+      // RESERVIERT / FIX
+      { lat: 51.2224, lng: 6.77522, type:'reserved', name:'Hotel Ruby Luna ★',
+        tag:'BASIS', desc:'Kasernenstr. 39, 40213. Euer Quartier mitten in der Carlstadt.', num:'★' },
+      { lat: 51.2179423, lng: 6.7616801, type:'reserved', name:'Qomo · Rheinturm',
+        tag:'Do 20:30 RESERVIERT', desc:'Asiatisches Fine Dining auf 172 m, rotierender Boden. Treffpunkt 20:15 vor dem Rheinturm.', num:'Q' },
+      { lat: 51.2161667, lng: 6.7572861, type:'reserved', name:'Medienhafen',
+        tag:'Sa 11:30 PROGRAMM', desc:'Gehry-Bauten „Neuer Zollhof", WDR-Funkhaus, ehem. Industriehafen.', num:'M' },
+      { lat: 51.2215533, lng: 6.78528, type:'reserved', name:'Brauerei Schumacher',
+        tag:'Sa 19:00 RESERVIERT', desc:'Oststr. 123. Älteste Altbier-Brauerei Düsseldorfs, 1838.', num:'S' },
 
-*Stand: Mai 2026 · Alle Angaben ohne Gewähr.*
+      // TOUR A — Architektur & Kunst (4h, gekürzt)
+      { lat: 51.2274494, lng: 6.7711009, type:'tour-a', name:'Schlossturm & Burgplatz',
+        tag:'Tour A · 14:30', desc:'Letzter Rest des Düsseldorfer Schlosses, 13. Jh. Aufstockung 1552 von Alessandro Pasqualini.', num:'1' },
+      { lat: 51.2283929, lng: 6.775985, type:'tour-a', name:'K20 Kunstsammlung NRW',
+        tag:'Tour A · 15:00', desc:'Schwarze Granitfassade Dissing+Weitling. Picasso, Beuys, Klee. Am Feiertag 11–18 Uhr.', num:'2' },
+      { lat: 51.2274, lng: 6.7820, type:'tour-a', name:'Kö-Bogen I + II',
+        tag:'Tour A · 16:30', desc:'Libeskind 2013 (geknickte Fassade) + Ingenhoven (größte begrünte Fassade Europas, 30’000 Hainbuchen).', num:'3' },
+      { lat: 51.2218775, lng: 6.779264, type:'tour-a', name:'Königsallee „Kö"',
+        tag:'Tour A · 17:00', desc:'Boulevard dem Stadtgraben entlang. Vorbei am Dreischeibenhaus (Nachkriegsmoderne).', num:'4' },
+      { lat: 51.2210, lng: 6.7690, type:'tour-a', name:'Mannesmann-Hochhaus',
+        tag:'Tour A · 18:00', desc:'Eiermann & Schneider-Esleben, 1956–58. Eines der ersten modernen Hochhäuser Deutschlands.', num:'5' },
+
+      // TOUR B — Altstadt & Altbier (4h, gekürzt)
+      { lat: 51.2275403, lng: 6.7718871, type:'tour-b', name:'Stadterhebungsmonument',
+        tag:'Tour B · 14:30', desc:'Bronze-Skulptur von Bert Gerresheim mit 30+ Szenen Stadtgeschichte. Burgplatz.', num:'1' },
+      { lat: 51.2282953, lng: 6.7715864, type:'tour-b', name:'St. Lambertus (schiefer Turm)',
+        tag:'Tour B · 14:45', desc:'Backsteingotik 1288. Der verdrehte Spitzhelm ist Bauschaden, nicht Stilmittel.', num:'2' },
+      { lat: 51.2249992, lng: 6.7722509, type:'tour-b', name:'Uerige',
+        tag:'Tour B · 15:30', desc:'Berger Str. 1. Altbier-Klassiker. Köbes schenkt nach, bis ihr den Deckel aufs Glas legt.', num:'3' },
+      { lat: 51.2250704, lng: 6.7725847, type:'tour-b', name:'Et Kabüffke',
+        tag:'Tour B · 16:30', desc:'Flinger Str. 1. Heimat des Killepitsch-Kräuterlikörs. 6 Plätze drinnen, der Rest steht.', num:'4' },
+      { lat: 51.2295321, lng: 6.7752499, type:'tour-b', name:'Brauerei Füchschen',
+        tag:'Tour B · 17:00', desc:'Ratinger Str. 28. Familiärer als Uerige, gute rheinische Küche.', num:'5' },
+      { lat: 51.2284918, lng: 6.7705631, type:'tour-b', name:'Rheinuferpromenade',
+        tag:'Tour B · 18:00', desc:'1995 von Niklaus Fritschi gestaltet. Autofrei, 1,5 km bis zum Rheinturm.', num:'6' }
+    ]
+  });
+
+  // ============ KÖLN KARTE (Tag) ============
+  buildMap({
+    mapId: 'map-cgn',
+    btnId: 'locate-cgn',
+    center: [50.9450, 6.9400],
+    zoom: 13,
+    places: [
+      { lat: 50.9430, lng: 6.9583, type:'point', name:'Köln Hauptbahnhof',
+        tag:'ANKUNFT ~10:25', desc:'Ankunft mit RE/RB von Düsseldorf. 2 Minuten Fußweg zum Dom.', num:'B' },
+      { lat: 50.9413, lng: 6.9583, type:'reserved', name:'Kölner Dom',
+        tag:'Fr 11:45 FÜHRUNG', desc:'UNESCO-Welterbe. Baubeginn 1248, Fertigstellung 1880. 157 m hoch — 1880–1884 das höchste Gebäude der Welt.', num:'D' },
+      { lat: 50.9420, lng: 6.9560, type:'point', name:'Altstadt-Bereich (Lunch)',
+        tag:'Fr ~13:00', desc:'Heumarkt-Bereich. „Leckerle" zwischendurch — Halve Hahn, Reibekuchen, Mettbrötchen.', num:'A' },
+      { lat: 50.9503, lng: 6.9144, type:'point', name:'Streetart Ehrenfeld',
+        tag:'Fr Nm STREETART', desc:'Bahnhof Ehrenfeld und Heliosstraße. Eine der dichtesten Streetart-Zonen Deutschlands, geprägt vom CityLeaks-Festival.', num:'★' },
+      { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant",
+        tag:'Fr ab 18:00 RESERVIERT', desc:'Cäcilienstr. 28. Traditionsgaststätte. Kölsch vom Fass, ehrliche rheinische Küche.', num:'T' }
+    ]
+  });
+
+  // ============ KÖLN NIGHTLIFE-KARTE ============
+  buildMap({
+    mapId: 'map-cgn-night',
+    btnId: 'locate-cgn-night',
+    center: [50.9385, 6.9450],
+    zoom: 14,
+    places: [
+      { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant",
+        tag:'AUSGANGSPUNKT', desc:'Ab hier startet ihr Richtung Nachtleben.', num:'T' },
+      { lat: 50.9355, lng: 6.9385, type:'nightlife', name:'Rudolfplatz / Friesenviertel',
+        tag:'AUSGEHVIERTEL', desc:'Klassisches Ausgehviertel. Bars, Pubs, kleine Clubs entlang Friesenstr./Brüsseler Platz.', num:'1' },
+      { lat: 50.9357, lng: 6.9433, type:'nightlife', name:'Belgisches Viertel',
+        tag:'HIPSTER & CRAFT', desc:'Brüsseler Platz und Umgebung. Craft Beer, Cocktailbars, Lieblings-Eckkneipen der lokalen Kreativen.', num:'2' },
+      { lat: 50.9332, lng: 6.9523, type:'nightlife', name:'Heumarkt / Alter Markt',
+        tag:'BRAUHÄUSER', desc:'Päffgen (Heumarkt 62), Gaffel am Dom, Sünner im Walfisch — wenn Kölsch direkt am Quell.', num:'3' },
+      { lat: 50.9268, lng: 6.9527, type:'nightlife', name:'Südstadt (Severinsviertel)',
+        tag:'GEMÜTLICH', desc:'Chilbi, Sünner Keller, Lommerzheim (Kult-Brauhaus, oft Schlange). Etwas südlicher, weniger touristisch.', num:'4' }
+    ]
+  });
+
+})();
