@@ -864,10 +864,24 @@ body.has-fullscreen-map { overflow: hidden; }
   border-radius: 18px;
   padding: 1.5rem;
   border: 1px solid var(--hairline);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
   display: flex; flex-direction: column;
+  text-decoration: none;
+  color: var(--ink);
+  position: relative;
+  cursor: pointer;
 }
-.option-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(31,58,86,0.08); }
+.option-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(31,58,86,0.12); border-color: var(--lime); }
+.option-card .option-link-icon {
+  position: absolute;
+  top: 1rem; right: 1.2rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--sky-deep);
+  transition: color 0.2s, transform 0.2s;
+}
+.option-card:hover .option-link-icon { color: var(--accent); transform: translate(2px, -2px); }
 .option-icon {
   width: 44px; height: 44px;
   background: var(--lime);
@@ -876,12 +890,12 @@ body.has-fullscreen-map { overflow: hidden; }
   font-size: 1.4rem;
   margin-bottom: 1rem;
 }
-.option-card h4 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.4rem; }
+.option-card h4 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 0.4rem; padding-right: 1.5rem; }
 .option-card p { font-size: 0.88rem; line-height: 1.5; color: var(--ink); opacity: 0.78; flex: 1; }
 .option-card .meta { font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--accent); margin-top: 0.7rem; padding-top: 0.7rem; border-top: 1px dashed var(--hairline); }
 .option-card .meta-extra { font-size: 0.72rem; color: var(--ink); opacity: 0.6; font-weight: 500; margin-top: 0.2rem; }
 
-/* ====== NIGHTLIFE CARDS (Köln) ====== */
+/* ====== NIGHTLIFE CARDS (Köln) — als klickbarer Button ====== */
 .nightlife-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -895,6 +909,18 @@ body.has-fullscreen-map { overflow: hidden; }
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
+  border: none;
+  text-align: left;
+  font-family: 'Manrope', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.nightlife-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(42, 27, 63, 0.4);
 }
 .nightlife-card::before {
   content: '';
@@ -917,6 +943,28 @@ body.has-fullscreen-map { overflow: hidden; }
 .nightlife-card h4 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.15rem; margin-bottom: 0.4rem; position: relative; }
 .nightlife-card p { font-size: 0.9rem; line-height: 1.5; opacity: 0.85; position: relative; }
 .nightlife-card .area { font-family: 'Caveat', cursive; font-size: 1.3rem; color: var(--lime); margin-top: 0.6rem; display: block; }
+.nightlife-card .card-hint {
+  margin-top: 0.8rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(184, 214, 73, 0.3);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--lime);
+  display: block;
+  transition: color 0.2s;
+}
+.nightlife-card:hover .card-hint { color: white; }
+
+/* Visueller Hinweis-Puls auf der Karte nach Map-Fokus */
+@keyframes mapFocusPulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.pin-marker.focus-pulse {
+  animation: mapFocusPulse 0.9s ease-in-out 2;
+}
 
 /* ====== INSIDER ====== */
 .insider-section { background: var(--ink); color: #F0F4F8; padding: 5rem 1.5rem; }

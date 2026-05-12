@@ -92,6 +92,9 @@
     });
   }
 
+  // ============ KARTEN-REGISTRY (für Card-Klicks die auf Pins fokussieren) ============
+  var mapRegistry = {};
+
   // ============ KARTEN HELPERS ============
   function createPin(type, number, isMajor) {
     var classes = 'pin-marker ' + type + (isMajor ? ' major' : '');
@@ -245,6 +248,12 @@
       });
     }
 
+    // Karte in der Registry ablegen — damit Card-Klicks darauf zugreifen können
+    mapRegistry[config.mapId] = {
+      map: map,
+      wrapId: config.wrapId
+    };
+
     return map;
   }
 
@@ -356,6 +365,52 @@
         tag:'GEMÜTLICH', desc:'Chilbi, Sünner Keller, das legendäre Lommerzheim (oft Schlange).', num:'4',
         link:'https://lommi-koeln.de/' }
     ]
+  });
+
+  // ============ CARD-KLICKS → KARTE FOKUSSIEREN ============
+  // Buttons/Cards mit Attributen: data-map-focus="mapId" data-lat="..." data-lng="..." data-zoom="..."
+  // Wenn man auf eine Card klickt: Seite scrollt zur Karte, Karte zentriert auf Punkt, Pin pulsiert.
+  document.querySelectorAll('[data-map-focus]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      // Klick auf einen Link innerhalb der Card → dem Link folgen, nicht fokussieren
+      if (e.target.tagName === 'A') return;
+
+      var targetId = el.dataset.mapFocus;
+      var lat = parseFloat(el.dataset.lat);
+      var lng = parseFloat(el.dataset.lng);
+      var zoom = parseInt(el.dataset.zoom || '16', 10);
+      var entry = mapRegistry[targetId];
+      if (!entry) return;
+
+      var wrap = document.getElementById(entry.wrapId);
+      if (!wrap) return;
+
+      // Zur Karte scrollen
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // Nach kurzer Wartezeit fokussieren + Pin pulsieren lassen
+      setTimeout(function() {
+        entry.map.setView([lat, lng], zoom);
+
+        // Pin in der Nähe finden und visuell hervorheben
+        entry.map.eachLayer(function(layer) {
+          if (layer instanceof L.Marker) {
+            var pos = layer.getLatLng();
+            if (Math.abs(pos.lat - lat) < 0.0005 && Math.abs(pos.lng - lng) < 0.0005) {
+              var iconEl = layer.getElement();
+              if (iconEl) {
+                var pin = iconEl.querySelector('.pin-marker');
+                if (pin) {
+                  pin.classList.add('focus-pulse');
+                  setTimeout(function() { pin.classList.remove('focus-pulse'); }, 1900);
+                }
+              }
+              layer.openPopup();
+            }
+          }
+        });
+      }, 600);
+    });
   });
 
 })();
