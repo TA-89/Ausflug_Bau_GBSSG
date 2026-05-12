@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Programm-Übersicht · Auffahrtsausflug 2026</title>
+<meta name="description" content="Komplettes Programm Auffahrtsausflug GBS Bauabteilung, Düsseldorf & Köln, 14.–17. Mai 2026.">
+
+<meta name="theme-color" content="#B8D649">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+
+<style>
+  /* Spezifische Styles nur für die Programm-Übersicht */
+  .program-hero {
+    background: var(--ink);
+    color: white;
+    padding: 3rem 1.5rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .program-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(184,214,73,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .program-hero-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+  .program-hero h1 {
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    line-height: 0.9;
+    color: var(--lime);
+    margin-bottom: 0.4rem;
+  }
+  .program-hero p { font-size: 1.05rem; opacity: 0.85; max-width: 55ch; margin-bottom: 1.5rem; }
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--lime);
+    color: var(--ink);
+    padding: 0.6rem 1.2rem;
+    border-radius: 100px;
+    text-decoration: none;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+  .back-link:hover { background: white; }
+
+  .program-page { padding: 3rem 1.5rem 4rem; background: var(--paper); }
+  .program-page .container { max-width: 1000px; }
+
+  .program-day {
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(31,58,86,0.06);
+    border: 1px solid var(--hairline);
+  }
+  .program-day-head {
+    background: linear-gradient(135deg, var(--ink), var(--ink-deep));
+    color: white;
+    padding: 1.5rem 1.8rem;
+    display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap;
+  }
+  .program-day-num {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--lime);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+  .program-day-info { flex: 1; }
+  .program-day-date { font-family: 'Manrope', sans-serif; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lime); margin-bottom: 0.2rem; font-weight: 700; }
+  .program-day-title { font-family: 'Caveat', cursive; font-size: 2.4rem; font-weight: 700; line-height: 1; }
+  .program-day-badge {
+    background: var(--accent);
+    color: white;
+    padding: 0.3rem 0.7rem;
+    border-radius: 100px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .program-table { width: 100%; border-collapse: collapse; }
+  .program-table tr { border-bottom: 1px solid var(--hairline); }
+  .program-table tr:last-child { border-bottom: none; }
+  .program-table tr:hover { background: var(--sky-light); }
+  .program-table td { padding: 1rem 1.5rem; vertical-align: top; font-family: 'Manrope', sans-serif; }
+  .program-table td.t-time {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    color: var(--accent);
+    width: 110px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+  }
+  .program-table td.t-content { font-size: 0.95rem; line-height: 1.5; }
+  .program-table td.t-content strong { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--ink); display: block; margin-bottom: 0.15rem; }
+  .program-table td.t-content em { font-style: normal; color: var(--ink); opacity: 0.75; font-size: 0.88rem; }
+  .program-table td.t-tag { width: 100px; text-align: right; padding-right: 1.5rem; }
+  .program-table .tag {
+    display: inline-block;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 0.25rem 0.6rem;
+    border-radius: 100px;
+  }
+  .tag-fix { background: var(--reserved); color: white; }
+  .tag-frei { background: var(--lime); color: var(--ink); }
+  .tag-info { background: var(--sky-deep); color: white; }
+
+  @media (max-width: 720px) {
+    .program-table td.t-tag { display: none; }
+    .program-table td { padding: 0.8rem 1rem; }
+    .program-table td.t-time { width: 80px; font-size: 0.85rem; }
+    .program-table td.t-content { font-size: 0.88rem; }
+    .program-day-head { padding: 1.2rem 1.2rem; gap: 1rem; }
+    .program-day-num { font-size: 2.4rem; }
+    .program-day-title { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR (gleiche wie index) -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-title">
+      Auffahrtsausflug 2026
+      <small>GBS Bauabteilung · 14.–17. Mai</small>
+    </div>
+    <a href="https://gbssg.ch" target="_blank" rel="noopener" aria-label="GBS St.Gallen">
+      <img src="assets/gbs-logo.png" alt="GBS St.Gallen" class="gbs-logo-img">
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="program-hero">
+  <div class="program-hero-inner">
+    <h1>Das ganze Programm</h1>
+    <p>Alle vier Tage auf einen Blick — chronologisch, ohne Schnickschnack. Für die ausführliche Version mit Karten, Tipps und Touren-Empfehlungen siehe Hauptseite.</p>
+    <a href="index.html" class="back-link">← Zurück zur Reise-Seite</a>
+  </div>
+</section>
+
+<!-- PROGRAMM -->
+<section class="program-page">
+  <div class="container">
+
+    <!-- DONNERSTAG -->
+    <div class="program-day">
+      <div class="program-day-head">
+        <div class="program-day-num">01</div>
+        <div class="program-day-info">
+          <div class="program-day-date">Donnerstag, 14. Mai 2026</div>
+          <div class="program-day-title">Anreise & Düsseldorf</div>
+        </div>
+        <span class="program-day-badge">Christi Himmelfahrt</span>
+      </div>
+      <table class="program-table">
+        <tr>
+          <td class="t-time">05:00</td>
+          <td class="t-content"><strong>Treffpunkt Bahnhof St.Gallen</strong><em>Bitte pünktlich</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Fix</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">05:07</td>
+          <td class="t-content"><strong>Abfahrt St.Gallen → Zürich Flughafen</strong><em>Gleis 1</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Fix</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">08:05</td>
+          <td class="t-content"><strong>Abflug Zürich → Köln/Bonn</strong><em>Ankunft 09:10</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Fix</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">~10:00</td>
+          <td class="t-content"><strong>Zug Köln/Bonn → Düsseldorf Hbf</strong><em>ca. 40 Min.</em></td>
+          <td class="t-tag"><span class="tag tag-info">Info</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">~11:30</td>
+          <td class="t-content"><strong>Check-in Hotel Ruby Luna</strong><em>Kasernenstr. 39, Carlstadt</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Fix</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">13:00–<br>19:30</td>
+          <td class="t-content"><strong>Nachmittag frei in Düsseldorf</strong><em>Tour A (Architektur & Kunst) oder Tour B (Altstadt & Altbier) — siehe Hauptseite</em></td>
+          <td class="t-tag"><span class="tag tag-frei">Frei</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">19:45</td>
+          <td class="t-content"><strong>Abmarsch Hotel → Rheinturm</strong><em>Gemeinsam zu Fuss</em></td>
+          <td class="t-tag"><span class="tag tag-info">Info</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">20:15</td>
+          <td class="t-content"><strong>Treffpunkt vor dem Rheinturm</strong><em>Für Direktankömmlinge</em></td>
+          <td class="t-tag"><span class="tag tag-info">Info</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">20:30</td>
+          <td class="t-content"><strong>Abendessen Qomo · Rheinturm</strong><em>Stromstr. 20 · Reservation steht ✓</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Reserviert</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- FREITAG -->
+    <div class="program-day">
+      <div class="program-day-head">
+        <div class="program-day-num">02</div>
+        <div class="program-day-info">
+          <div class="program-day-date">Freitag, 15. Mai 2026</div>
+          <div class="program-day-title">Tagestrip Köln</div>
+        </div>
+      </div>
+      <table class="program-table">
+        <tr>
+          <td class="t-time">~10:00</td>
+          <td class="t-content"><strong>Abfahrt nach Köln</strong><em>Zug Düsseldorf Hbf → Köln Hbf (RE/RB, ca. 25 Min.)</em></td>
+          <td class="t-tag"><span class="tag tag-info">Info</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">11:45</td>
+          <td class="t-content"><strong>Führung Kölner Dom</strong><em>UNESCO-Welterbe, 1 Stunde</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Fix</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">~13:00</td>
+          <td class="t-content"><strong>„Leckerle" in der Altstadt</strong><em>Halve Hahn, Reibekuchen, Mettbrötchen rund um den Heumarkt</em></td>
+          <td class="t-tag"><span class="tag tag-frei">Frei</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">Nm.</td>
+          <td class="t-content"><strong>Streetart-Führung mit Madeleine (freiwillig)</strong><em>ca. 2 Stunden in Köln-Ehrenfeld</em></td>
+          <td class="t-tag"><span class="tag tag-frei">Frei</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">ab 18:00</td>
+          <td class="t-content"><strong>Abendessen „Bei d'r Tant"</strong><em>Cäcilienstr. 28 · Reservation steht ✓</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Reserviert</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">spätabends</td>
+          <td class="t-content"><strong>Rückreise nach Düsseldorf</strong><em>Gemeinsam oder individuell · Optional Ausgehviertel — siehe Hauptseite</em></td>
+          <td class="t-tag"><span class="tag tag-frei">Frei</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SAMSTAG -->
+    <div class="program-day">
+      <div class="program-day-head">
+        <div class="program-day-num">03</div>
+        <div class="program-day-info">
+          <div class="program-day-date">Samstag, 16. Mai 2026</div>
+          <div class="program-day-title">Medienhafen & freier Tag</div>
+        </div>
+      </div>
+      <table class="program-table">
+        <tr>
+          <td class="t-time">11:00</td>
+          <td class="t-content"><strong>Abmarsch Hotel → Medienhafen</strong><em>Ca. 25 Min. zu Fuss oder Tram</em></td>
+          <td class="t-tag"><span class="tag tag-info">Info</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">11:30</td>
+          <td class="t-content"><strong>Besuch Medienhafen</strong><em>Gehry „Neuer Zollhof", WDR-Funkhaus · ca. 1,5 Std.</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Fix</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">~13:00–<br>18:30</td>
+          <td class="t-content"><strong>Nachmittag frei</strong><em>6 Optionen: Schifffahrt · Japan-Viertel · Brauhaustour · K20/Kunstpalast · Zeche Zollverein · Schloss Benrath — siehe Hauptseite</em></td>
+          <td class="t-tag"><span class="tag tag-frei">Frei</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">19:00</td>
+          <td class="t-content"><strong>Abendessen Brauerei Schumacher</strong><em>Oststr. 123 · Reservation steht ✓</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Reserviert</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SONNTAG -->
+    <div class="program-day">
+      <div class="program-day-head">
+        <div class="program-day-num">04</div>
+        <div class="program-day-info">
+          <div class="program-day-date">Sonntag, 17. Mai 2026</div>
+          <div class="program-day-title">Rückreise</div>
+        </div>
+      </div>
+      <table class="program-table">
+        <tr>
+          <td class="t-time">am</td>
+          <td class="t-content"><strong>Gemütliches Frühstück</strong><em>Im Hotel Ruby Luna</em></td>
+          <td class="t-tag"><span class="tag tag-info">Info</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">~11:00</td>
+          <td class="t-content"><strong>Abfahrt zum Flughafen Düsseldorf</strong><em>S11 oder Taxi, ca. 30 Min.</em></td>
+          <td class="t-tag"><span class="tag tag-info">Info</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">13:50</td>
+          <td class="t-content"><strong>Abflug Düsseldorf → Zürich</strong><em>Ankunft Zürich 14:55</em></td>
+          <td class="t-tag"><span class="tag tag-fix">Fix</span></td>
+        </tr>
+        <tr>
+          <td class="t-time">Nm.</td>
+          <td class="t-content"><strong>Weiterreise Zürich → St.Gallen</strong><em>Mit der Bahn</em></td>
+          <td class="t-tag"><span class="tag tag-info">Info</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- ZURÜCK BUTTON -->
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="index.html" class="back-link">← Zurück zur Hauptseite</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-script">Bis bald in Düsseldorf!</div>
+  <p><strong>GBS St.Gallen · Bauabteilung</strong></p>
+  <p>Auffahrtsausflug · 14. bis 17. Mai 2026</p>
+  <div class="mono-small">Alle Angaben ohne Gewähr</div>
+</footer>
+
+<!-- Service Worker registrieren -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').catch(() => {});
+    });
+  }
+</script>
+
+</body>
+</html>

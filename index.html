@@ -8,6 +8,14 @@
 
 <link rel="icon" type="image/png" href="assets/gbs-logo.png">
 
+<!-- PWA Setup -->
+<meta name="theme-color" content="#B8D649">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="GBS Reise 2026">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
 <!-- Schriften -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -148,6 +156,7 @@
     <a class="nav-link" href="#samstag">Samstag</a>
     <a class="nav-link" href="#sonntag">Sonntag</a>
     <a class="nav-link" href="#insider">Insider</a>
+    <a class="nav-link" href="programm.html" style="background: var(--lime); color: var(--ink);">📋 Programm</a>
   </div>
 </nav>
 
@@ -759,11 +768,28 @@
   </div>
 </section>
 
+<!-- ============ PWA INSTALL BANNER ============ -->
+<div class="pwa-install-banner" id="pwa-install-banner">
+  <div class="pwa-install-icon">📱</div>
+  <div class="pwa-install-content">
+    <h4>App installieren?</h4>
+    <p class="pwa-android-msg">Speichere die Reise-Webseite als App auf deinem Handy — offline verfügbar, ohne Browser-Leiste.</p>
+    <p class="pwa-ios-msg">Tippe unten auf <strong>Teilen</strong> ⬆ und wähle <strong>„Zum Home-Bildschirm"</strong>, um die Reise als App zu speichern.</p>
+  </div>
+  <div class="pwa-buttons">
+    <button id="pwa-install-btn">Installieren</button>
+    <button id="pwa-dismiss-btn">Später</button>
+  </div>
+</div>
+
 <!-- ============ FOOTER ============ -->
 <footer>
   <div class="footer-script">Bis bald in Düsseldorf!</div>
   <p><strong>GBS St.Gallen · Bauabteilung</strong></p>
   <p>Auffahrtsausflug · 14. bis 17. Mai 2026</p>
+  <p style="margin-top: 1rem;">
+    <a href="programm.html" style="color: var(--lime); text-decoration: underline; font-weight: 600;">→ Komplettes Programm als Übersicht</a>
+  </p>
   <div class="mono-small">
     Alle Angaben ohne Gewähr · Karten © OpenStreetMap-Mitwirkende, © CARTO
   </div>

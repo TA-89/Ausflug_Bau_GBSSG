@@ -1,12 +1,64 @@
 /* =========================================================
-   GBS Bauabteilung · Karten + Interaktion
+   GBS Bauabteilung · Karten + Interaktion + PWA
    Verwendet: Leaflet.js + OpenStreetMap (CARTO Voyager Tiles)
    ========================================================= */
 
 (function() {
   'use strict';
 
-  // ============ HELPERS ============
+  // ============ SERVICE WORKER REGISTRIEREN ============
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('service-worker.js').catch(function() {});
+    });
+  }
+
+  // ============ PWA INSTALL BANNER ============
+  // Android Chrome: zeigt "beforeinstallprompt"-Event, dann kann man den Install-Dialog auslösen.
+  // iOS Safari: kein API, aber wir können einen freundlichen Hinweis anzeigen.
+  var deferredPrompt = null;
+  var installBanner = document.getElementById('pwa-install-banner');
+  var installBtn = document.getElementById('pwa-install-btn');
+  var dismissBtn = document.getElementById('pwa-dismiss-btn');
+
+  var dismissedKey = 'pwa-install-dismissed';
+  var alreadyInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  if (!alreadyInstalled && installBanner && !localStorage.getItem(dismissedKey)) {
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBanner.classList.add('show');
+      if (installBtn) installBtn.style.display = 'inline-flex';
+    });
+
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      setTimeout(function() {
+        installBanner.classList.add('show', 'ios');
+      }, 3000);
+    }
+  }
+
+  if (installBtn) {
+    installBtn.addEventListener('click', function() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then(function() {
+        deferredPrompt = null;
+        installBanner.classList.remove('show');
+      });
+    });
+  }
+
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', function() {
+      installBanner.classList.remove('show');
+      localStorage.setItem(dismissedKey, '1');
+    });
+  }
+
+  // ============ KARTEN HELPERS ============
   function createPin(type, number) {
     return L.divIcon({
       className: '',
@@ -17,19 +69,24 @@
     });
   }
 
-  function popup(tag, tagClass, name, desc, lat, lng) {
-    var url = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
+  function popup(opts) {
+    var navUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + opts.lat + ',' + opts.lng;
+    var infoLink = '';
+    if (opts.link) {
+      infoLink = '<a href="' + opts.link + '" target="_blank" rel="noopener">ℹ️ Mehr erfahren</a>';
+    }
     return '<div class="popup">' +
-      '<span class="popup-tag ' + tagClass + '">' + tag + '</span>' +
-      '<h4>' + name + '</h4>' +
-      '<p>' + desc + '</p>' +
-      '<a href="' + url + '" target="_blank" rel="noopener">→ Navigieren via Google Maps</a>' +
+      '<span class="popup-tag ' + opts.type + '">' + opts.tag + '</span>' +
+      '<h4>' + opts.name + '</h4>' +
+      '<p>' + opts.desc + '</p>' +
+      '<div class="popup-links">' +
+        '<a href="' + navUrl + '" target="_blank" rel="noopener">📍 Navigieren</a>' +
+        (infoLink ? ' &nbsp; ' + infoLink : '') +
+      '</div>' +
     '</div>';
   }
 
   // ============ MAP FACTORY ============
-  // Erzeugt eine eigenständige Karte für einen Container und eine Liste von Orten.
-  // Mehrere Karten auf der gleichen Seite sind problemlos möglich — jede hat ihren eigenen Scope.
   function buildMap(config) {
     var mapEl = document.getElementById(config.mapId);
     if (!mapEl) return;
@@ -40,7 +97,6 @@
       scrollWheelZoom: false
     });
 
-    // Scroll-Wheel-Zoom erst nach Klick aktivieren (sonst nervt's beim Scrollen)
     map.on('click', function() { map.scrollWheelZoom.enable(); });
     map.on('mouseout', function() { map.scrollWheelZoom.disable(); });
 
@@ -50,13 +106,11 @@
       maxZoom: 19
     }).addTo(map);
 
-    // Marker setzen
     config.places.forEach(function(p) {
       var marker = L.marker([p.lat, p.lng], { icon: createPin(p.type, p.num) }).addTo(map);
-      marker.bindPopup(popup(p.tag, p.type, p.name, p.desc, p.lat, p.lng));
+      marker.bindPopup(popup(p));
     });
 
-    // Geolocation-Button verbinden — eigener State pro Karte
     var userMarker = null;
     var accuracyCircle = null;
     var btn = document.getElementById(config.btnId);
@@ -123,41 +177,53 @@
     center: [51.2240, 6.7735],
     zoom: 14,
     places: [
-      // RESERVIERT / FIX
       { lat: 51.2224, lng: 6.77522, type:'reserved', name:'Hotel Ruby Luna ★',
-        tag:'BASIS', desc:'Kasernenstr. 39, 40213. Euer Quartier mitten in der Carlstadt.', num:'★' },
+        tag:'BASIS', desc:'Kasernenstr. 39, 40213. Euer Quartier mitten in der Carlstadt.', num:'★',
+        link:'https://www.rubyhotels.com/de/hotels/duesseldorf/ruby-luna/' },
       { lat: 51.2179423, lng: 6.7616801, type:'reserved', name:'Qomo · Rheinturm',
-        tag:'Do 20:30 RESERVIERT', desc:'Asiatisches Fine Dining auf 172 m, rotierender Boden. Treffpunkt 20:15 vor dem Rheinturm.', num:'Q' },
+        tag:'Do 20:30 RESERVIERT', desc:'Asiatisches Fine Dining auf 172 m, rotierender Boden. Treffpunkt 20:15 vor dem Rheinturm.', num:'Q',
+        link:'https://www.qomo-restaurant.de/' },
       { lat: 51.2161667, lng: 6.7572861, type:'reserved', name:'Medienhafen',
-        tag:'Sa 11:30 PROGRAMM', desc:'Gehry-Bauten „Neuer Zollhof", WDR-Funkhaus, ehem. Industriehafen.', num:'M' },
+        tag:'Sa 11:30 PROGRAMM', desc:'Gehry-Bauten „Neuer Zollhof", WDR-Funkhaus, ehem. Industriehafen.', num:'M',
+        link:'https://de.wikipedia.org/wiki/Medienhafen' },
       { lat: 51.2215533, lng: 6.78528, type:'reserved', name:'Brauerei Schumacher',
-        tag:'Sa 19:00 RESERVIERT', desc:'Oststr. 123. Älteste Altbier-Brauerei Düsseldorfs, 1838.', num:'S' },
+        tag:'Sa 19:00 RESERVIERT', desc:'Oststr. 123. Älteste Altbier-Brauerei Düsseldorfs, 1838.', num:'S',
+        link:'https://www.schumacher-alt.de/' },
 
-      // TOUR A — Architektur & Kunst (4h, gekürzt)
       { lat: 51.2274494, lng: 6.7711009, type:'tour-a', name:'Schlossturm & Burgplatz',
-        tag:'Tour A · 14:30', desc:'Letzter Rest des Düsseldorfer Schlosses, 13. Jh. Aufstockung 1552 von Alessandro Pasqualini.', num:'1' },
+        tag:'Tour A · 14:30', desc:'Letzter Rest des Düsseldorfer Schlosses, 13. Jh. Heute Schifffahrtsmuseum.', num:'1',
+        link:'https://de.wikipedia.org/wiki/Schlossturm_(D%C3%BCsseldorf)' },
       { lat: 51.2283929, lng: 6.775985, type:'tour-a', name:'K20 Kunstsammlung NRW',
-        tag:'Tour A · 15:00', desc:'Schwarze Granitfassade Dissing+Weitling. Picasso, Beuys, Klee. Am Feiertag 11–18 Uhr.', num:'2' },
+        tag:'Tour A · 15:00', desc:'Schwarze Granitfassade von Dissing+Weitling. Picasso, Beuys, Klee.', num:'2',
+        link:'https://www.kunstsammlung.de/de/museum/K20' },
       { lat: 51.2274, lng: 6.7820, type:'tour-a', name:'Kö-Bogen I + II',
-        tag:'Tour A · 16:30', desc:'Libeskind 2013 (geknickte Fassade) + Ingenhoven (größte begrünte Fassade Europas, 30’000 Hainbuchen).', num:'3' },
+        tag:'Tour A · 16:30', desc:'Libeskind (2013) + Ingenhoven (größte begrünte Fassade Europas — 30’000 Hainbuchen).', num:'3',
+        link:'https://de.wikipedia.org/wiki/K%C3%B6-Bogen' },
       { lat: 51.2218775, lng: 6.779264, type:'tour-a', name:'Königsallee „Kö"',
-        tag:'Tour A · 17:00', desc:'Boulevard dem Stadtgraben entlang. Vorbei am Dreischeibenhaus (Nachkriegsmoderne).', num:'4' },
+        tag:'Tour A · 17:00', desc:'Boulevard dem Stadtgraben entlang. Vorbei am Dreischeibenhaus — Ikone der Nachkriegsmoderne.', num:'4',
+        link:'https://de.wikipedia.org/wiki/K%C3%B6nigsallee_(D%C3%BCsseldorf)' },
       { lat: 51.2210, lng: 6.7690, type:'tour-a', name:'Mannesmann-Hochhaus',
-        tag:'Tour A · 18:00', desc:'Eiermann & Schneider-Esleben, 1956–58. Eines der ersten modernen Hochhäuser Deutschlands.', num:'5' },
+        tag:'Tour A · 18:00', desc:'Eiermann & Schneider-Esleben, 1956–58. Eines der ersten modernen Hochhäuser Deutschlands.', num:'5',
+        link:'https://de.wikipedia.org/wiki/Mannesmann-Hochhaus' },
 
-      // TOUR B — Altstadt & Altbier (4h, gekürzt)
       { lat: 51.2275403, lng: 6.7718871, type:'tour-b', name:'Stadterhebungsmonument',
-        tag:'Tour B · 14:30', desc:'Bronze-Skulptur von Bert Gerresheim mit 30+ Szenen Stadtgeschichte. Burgplatz.', num:'1' },
+        tag:'Tour B · 14:30', desc:'Bronze-Skulptur von Bert Gerresheim mit 30+ Szenen Stadtgeschichte. Burgplatz.', num:'1',
+        link:'https://de.wikipedia.org/wiki/Stadterhebungsmonument' },
       { lat: 51.2282953, lng: 6.7715864, type:'tour-b', name:'St. Lambertus (schiefer Turm)',
-        tag:'Tour B · 14:45', desc:'Backsteingotik 1288. Der verdrehte Spitzhelm ist Bauschaden, nicht Stilmittel.', num:'2' },
+        tag:'Tour B · 14:45', desc:'Backsteingotik 1288. Der verdrehte Spitzhelm ist Bauschaden, nicht Stilmittel.', num:'2',
+        link:'https://de.wikipedia.org/wiki/St._Lambertus_(D%C3%BCsseldorf)' },
       { lat: 51.2249992, lng: 6.7722509, type:'tour-b', name:'Uerige',
-        tag:'Tour B · 15:30', desc:'Berger Str. 1. Altbier-Klassiker. Köbes schenkt nach, bis ihr den Deckel aufs Glas legt.', num:'3' },
+        tag:'Tour B · 15:30', desc:'Berger Str. 1. Altbier-Klassiker. Köbes schenkt nach, bis ihr den Deckel aufs Glas legt.', num:'3',
+        link:'https://www.uerige.de/' },
       { lat: 51.2250704, lng: 6.7725847, type:'tour-b', name:'Et Kabüffke',
-        tag:'Tour B · 16:30', desc:'Flinger Str. 1. Heimat des Killepitsch-Kräuterlikörs. 6 Plätze drinnen, der Rest steht.', num:'4' },
+        tag:'Tour B · 16:30', desc:'Flinger Str. 1. Heimat des Killepitsch-Kräuterlikörs. 6 Plätze drinnen, der Rest steht.', num:'4',
+        link:'https://www.killepitsch.de/' },
       { lat: 51.2295321, lng: 6.7752499, type:'tour-b', name:'Brauerei Füchschen',
-        tag:'Tour B · 17:00', desc:'Ratinger Str. 28. Familiärer als Uerige, gute rheinische Küche.', num:'5' },
+        tag:'Tour B · 17:00', desc:'Ratinger Str. 28. Familiärer als Uerige, gute rheinische Küche.', num:'5',
+        link:'https://www.fuechschen.de/' },
       { lat: 51.2284918, lng: 6.7705631, type:'tour-b', name:'Rheinuferpromenade',
-        tag:'Tour B · 18:00', desc:'1995 von Niklaus Fritschi gestaltet. Autofrei, 1,5 km bis zum Rheinturm.', num:'6' }
+        tag:'Tour B · 18:00', desc:'1995 von Niklaus Fritschi gestaltet. Autofrei, 1,5 km bis zum Rheinturm.', num:'6',
+        link:'https://de.wikipedia.org/wiki/Rheinuferpromenade_(D%C3%BCsseldorf)' }
     ]
   });
 
@@ -169,15 +235,20 @@
     zoom: 13,
     places: [
       { lat: 50.9430, lng: 6.9583, type:'point', name:'Köln Hauptbahnhof',
-        tag:'ANKUNFT ~10:25', desc:'Ankunft mit RE/RB von Düsseldorf. 2 Minuten Fußweg zum Dom.', num:'B' },
+        tag:'ANKUNFT ~10:25', desc:'Ankunft mit RE/RB von Düsseldorf. 2 Minuten Fußweg zum Dom.', num:'B',
+        link:'https://www.bahnhof.de/koeln-hbf' },
       { lat: 50.9413, lng: 6.9583, type:'reserved', name:'Kölner Dom',
-        tag:'Fr 11:45 FÜHRUNG', desc:'UNESCO-Welterbe. Baubeginn 1248, Fertigstellung 1880. 157 m hoch — 1880–1884 das höchste Gebäude der Welt.', num:'D' },
+        tag:'Fr 11:45 FÜHRUNG', desc:'UNESCO-Welterbe. Baubeginn 1248, Fertigstellung 1880. 157 m hoch.', num:'D',
+        link:'https://www.koelner-dom.de/' },
       { lat: 50.9420, lng: 6.9560, type:'point', name:'Altstadt-Bereich (Lunch)',
-        tag:'Fr ~13:00', desc:'Heumarkt-Bereich. „Leckerle" zwischendurch — Halve Hahn, Reibekuchen, Mettbrötchen.', num:'A' },
+        tag:'Fr ~13:00', desc:'Heumarkt-Bereich. „Leckerle" — Halve Hahn, Reibekuchen, Mettbrötchen.', num:'A',
+        link:'https://www.koelntourismus.de/sehen-erleben/koelner-altstadt' },
       { lat: 50.9503, lng: 6.9144, type:'point', name:'Streetart Ehrenfeld',
-        tag:'Fr Nm STREETART', desc:'Bahnhof Ehrenfeld und Heliosstraße. Eine der dichtesten Streetart-Zonen Deutschlands, geprägt vom CityLeaks-Festival.', num:'★' },
+        tag:'Fr Nm STREETART', desc:'Bahnhof Ehrenfeld und Heliosstraße. Geprägt vom CityLeaks-Festival.', num:'★',
+        link:'https://cityleaks.de/' },
       { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant",
-        tag:'Fr ab 18:00 RESERVIERT', desc:'Cäcilienstr. 28. Traditionsgaststätte. Kölsch vom Fass, ehrliche rheinische Küche.', num:'T' }
+        tag:'Fr ab 18:00 RESERVIERT', desc:'Cäcilienstr. 28. Traditionsgaststätte. Kölsch vom Fass, rheinische Küche.', num:'T',
+        link:'https://beidrtant.de/' }
     ]
   });
 
@@ -189,15 +260,20 @@
     zoom: 14,
     places: [
       { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant",
-        tag:'AUSGANGSPUNKT', desc:'Ab hier startet ihr Richtung Nachtleben.', num:'T' },
+        tag:'AUSGANGSPUNKT', desc:'Ab hier startet ihr Richtung Nachtleben.', num:'T',
+        link:'https://beidrtant.de/' },
       { lat: 50.9355, lng: 6.9385, type:'nightlife', name:'Rudolfplatz / Friesenviertel',
-        tag:'AUSGEHVIERTEL', desc:'Klassisches Ausgehviertel. Bars, Pubs, kleine Clubs entlang Friesenstr./Brüsseler Platz.', num:'1' },
+        tag:'AUSGEHVIERTEL', desc:'Klassisches Ausgehviertel. Bars, Pubs, kleine Clubs entlang Friesenstraße.', num:'1',
+        link:'https://de.wikipedia.org/wiki/Rudolfplatz_(K%C3%B6ln)' },
       { lat: 50.9357, lng: 6.9433, type:'nightlife', name:'Belgisches Viertel',
-        tag:'HIPSTER & CRAFT', desc:'Brüsseler Platz und Umgebung. Craft Beer, Cocktailbars, Lieblings-Eckkneipen der lokalen Kreativen.', num:'2' },
+        tag:'HIPSTER & CRAFT', desc:'Brüsseler Platz und Umgebung. Craft Beer, Cocktailbars, Lieblings-Eckkneipen.', num:'2',
+        link:'https://de.wikipedia.org/wiki/Belgisches_Viertel' },
       { lat: 50.9332, lng: 6.9523, type:'nightlife', name:'Heumarkt / Alter Markt',
-        tag:'BRAUHÄUSER', desc:'Päffgen (Heumarkt 62), Gaffel am Dom, Sünner im Walfisch — wenn Kölsch direkt am Quell.', num:'3' },
+        tag:'BRAUHÄUSER', desc:'Päffgen, Gaffel am Dom, Sünner im Walfisch — Kölsch direkt am Quell.', num:'3',
+        link:'https://www.paeffgen-koelsch.de/' },
       { lat: 50.9268, lng: 6.9527, type:'nightlife', name:'Südstadt (Severinsviertel)',
-        tag:'GEMÜTLICH', desc:'Chilbi, Sünner Keller, Lommerzheim (Kult-Brauhaus, oft Schlange). Etwas südlicher, weniger touristisch.', num:'4' }
+        tag:'GEMÜTLICH', desc:'Chilbi, Sünner Keller, das legendäre Lommerzheim (oft Schlange).', num:'4',
+        link:'https://lommi-koeln.de/' }
     ]
   });
 
