@@ -65,6 +65,16 @@
     refreshBtn.addEventListener('click', function() {
       refreshBtn.classList.add('spinning');
 
+      // Sichtbares Feedback: Toast einblenden
+      var toast = document.createElement('div');
+      toast.className = 'refresh-toast';
+      toast.textContent = 'Aktualisiere…';
+      document.body.appendChild(toast);
+      // Doppelt rAF erzwingt das Anzeigen vor dem Reload
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() { toast.classList.add('show'); });
+      });
+
       var clearCache = function() {
         if ('caches' in window) {
           return caches.keys().then(function(names) {
@@ -83,17 +93,18 @@
         return Promise.resolve();
       };
 
-      // Cache leeren + Service Worker zurücksetzen, dann hart neuladen
+      // Erst Cache & SW löschen, kurz Toast zeigen, dann hart neu laden
       Promise.all([clearCache(), unregisterSW()]).catch(function() {}).finally(function() {
-        // Cache-Buster-Parameter erzwingt Netzwerk-Anfrage
-        var url = window.location.pathname + '?reload=' + Date.now();
-        window.location.replace(url);
+        setTimeout(function() {
+          var url = window.location.pathname + '?reload=' + Date.now();
+          window.location.replace(url);
+        }, 350);
       });
 
-      // Sicherheits-Fallback: falls Promise.finally nicht durchläuft, nach 2 Sek. hart reloaden
+      // Sicherheits-Fallback: falls Promise.finally nicht durchläuft
       setTimeout(function() {
         window.location.reload();
-      }, 2000);
+      }, 2500);
     });
   }
 
