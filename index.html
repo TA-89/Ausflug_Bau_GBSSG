@@ -191,13 +191,54 @@
   </svg>
 </section>
 
-<!-- ============ ALERT BANNER (dezenter) ============ -->
-<div class="alert-wrap">
-  <div class="alert">
-    <div class="alert-icon">!</div>
-    <div>
-      <h3>Donnerstag = Christi Himmelfahrt + Vatertag</h3>
-      <p>Gesetzlicher Feiertag in NRW. Geschäfte (auch Königsallee), Supermärkte und Carlsplatz-Markt sind geschlossen. Museen, Brauereien und Gastronomie sind offen, aber sehr voll. Mit Vatertags-Gruppen (Bollerwagen!) ist zu rechnen.</p>
+<!-- ============ HOLIDAY HINT (kompakt, klickbar) ============ -->
+<div class="holiday-hint-wrap">
+  <button class="holiday-hint" id="holiday-hint" type="button" aria-label="Hinweis zum Donnerstag anzeigen">
+    <span class="holiday-hint-icon">!</span>
+    <span class="holiday-hint-label">Christi Himmelfahrt</span>
+  </button>
+</div>
+
+<!-- Detail-Modal für den Vatertag-Hinweis -->
+<div class="holiday-modal" id="holiday-modal">
+  <div class="holiday-modal-card">
+    <button class="holiday-modal-close" id="holiday-modal-close" type="button" aria-label="Schliessen">×</button>
+    <div class="holiday-modal-icon">!</div>
+    <h3>Donnerstag = Christi Himmelfahrt + Vatertag</h3>
+    <p>Gesetzlicher Feiertag in NRW. Geschäfte (auch Königsallee), Supermärkte und Carlsplatz-Markt sind geschlossen. Museen, Brauereien und Gastronomie sind offen, aber sehr voll. Mit Vatertags-Gruppen (Bollerwagen!) ist zu rechnen.</p>
+    <button class="holiday-modal-ok" id="holiday-modal-ok" type="button">OK, verstanden</button>
+  </div>
+</div>
+
+<!-- Geolocation-Hilfe-Modal -->
+<div class="geo-modal" id="geo-modal">
+  <div class="geo-modal-card">
+    <button class="geo-modal-close" id="geo-modal-close" type="button" aria-label="Schliessen">×</button>
+    <div class="geo-modal-icon">📍</div>
+    <h3 class="geo-modal-title">Standort-Freigabe nötig</h3>
+    <p class="geo-modal-message">Damit wir deinen Standort auf der Karte zeigen können, brauchen wir deine Erlaubnis.</p>
+
+    <div class="geo-modal-details">
+      <p style="font-size: 0.85rem; opacity: 0.7; margin-bottom: 0.4rem;"><strong>Wenn der Erlaubnis-Dialog nicht kommt</strong>, hast du ihn früher abgelehnt. So gibst du den Standort wieder frei:</p>
+      <div class="geo-tab-content active" data-geo-content="android">
+        <ol class="geo-modal-steps">
+          <li>Oben in der Adressleiste auf das <strong>Schloss-Symbol</strong> 🔒 tippen</li>
+          <li>„Berechtigungen" → <strong>Standort: Zulassen</strong></li>
+          <li>Diese Seite neu laden (Refresh-Knopf oben rechts)</li>
+        </ol>
+      </div>
+      <div class="geo-tab-content" data-geo-content="ios">
+        <ol class="geo-modal-steps">
+          <li>iPhone-<strong>Einstellungen</strong> öffnen</li>
+          <li>Bei <strong>Safari</strong> → <strong>Standort</strong> → „Erlauben"</li>
+          <li>Diese Seite neu laden (Refresh-Knopf oben rechts)</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 0.5rem; margin-top: 0.6rem;">
+      <button class="geo-modal-ok" id="geo-retry-btn" type="button" style="flex: 2;">🔄 Nochmal versuchen</button>
+      <button class="geo-modal-ok" id="geo-close-btn" type="button" style="flex: 1; background: var(--hairline); color: var(--ink);">Schliessen</button>
     </div>
   </div>
 </div>

@@ -180,6 +180,94 @@
     });
   }
 
+  // ============ HOLIDAY-HINT (Vatertag-Klick) ============
+  var holidayHint = document.getElementById('holiday-hint');
+  var holidayModal = document.getElementById('holiday-modal');
+  if (holidayHint && holidayModal) {
+    var closeHolidayBtn = holidayModal.querySelector('#holiday-modal-close');
+    var okHolidayBtn = holidayModal.querySelector('#holiday-modal-ok');
+    function closeHoliday() { holidayModal.classList.remove('show'); }
+    holidayHint.addEventListener('click', function() { holidayModal.classList.add('show'); });
+    if (closeHolidayBtn) closeHolidayBtn.addEventListener('click', closeHoliday);
+    if (okHolidayBtn) okHolidayBtn.addEventListener('click', closeHoliday);
+    holidayModal.addEventListener('click', function(e) {
+      if (e.target === holidayModal) closeHoliday();
+    });
+  }
+
+  // ============ GEOLOCATION HILFE ============
+  // Zeigt einen Hilfe-Dialog wenn der Standort nicht ermittelt werden kann.
+  // Bietet "Nochmal versuchen" und eine Anleitung wie die Berechtigung freigegeben wird.
+  window.showGeoHelp = function(err, onRetry) {
+    var modal = document.getElementById('geo-modal');
+    if (!modal) return;
+
+    var title = modal.querySelector('.geo-modal-title');
+    var message = modal.querySelector('.geo-modal-message');
+    var details = modal.querySelector('.geo-modal-details');
+    var retryBtn = modal.querySelector('#geo-retry-btn');
+
+    // Fehlerart erkennen
+    var isPermissionDenied = err && err.code === 1; // PERMISSION_DENIED
+    var isPositionUnavailable = err && err.code === 2;
+    var isTimeout = err && err.code === 3;
+
+    if (isPermissionDenied) {
+      title.textContent = 'Standort-Freigabe nötig';
+      message.textContent = 'Damit wir deinen Standort auf der Karte zeigen können, brauchen wir deine Erlaubnis.';
+      details.style.display = 'block';
+    } else if (isPositionUnavailable) {
+      title.textContent = 'Standort nicht ermittelbar';
+      message.textContent = 'Kein GPS-Signal verfügbar. Bist du in einem Gebäude? Im Freien klappt es meist besser.';
+      details.style.display = 'none';
+    } else if (isTimeout) {
+      title.textContent = 'Standort-Suche hat zu lange gedauert';
+      message.textContent = 'Versuch es nochmal — manchmal hilft schon ein zweiter Anlauf.';
+      details.style.display = 'none';
+    } else {
+      title.textContent = 'Standort nicht verfügbar';
+      message.textContent = 'Geolocation funktioniert nicht. Möglicherweise nutzt du einen Privat-Modus.';
+      details.style.display = 'none';
+    }
+
+    // Plattform-spezifische Anleitung ein-/ausblenden
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var androidTab = modal.querySelector('[data-geo-content="android"]');
+    var iosTab = modal.querySelector('[data-geo-content="ios"]');
+    if (androidTab && iosTab) {
+      androidTab.style.display = isIOS ? 'none' : 'block';
+      iosTab.style.display = isIOS ? 'block' : 'none';
+    }
+
+    modal.classList.add('show');
+
+    // Retry-Button verbinden
+    if (retryBtn && onRetry) {
+      retryBtn.style.display = 'inline-flex';
+      var newRetryBtn = retryBtn.cloneNode(true);
+      retryBtn.parentNode.replaceChild(newRetryBtn, retryBtn);
+      newRetryBtn.addEventListener('click', function() {
+        modal.classList.remove('show');
+        onRetry();
+      });
+    } else if (retryBtn) {
+      retryBtn.style.display = 'none';
+    }
+  };
+
+  // Geo-Modal schliessen
+  var geoModal = document.getElementById('geo-modal');
+  if (geoModal) {
+    var closeBtn = geoModal.querySelector('.geo-modal-close');
+    var okBtn = geoModal.querySelector('#geo-close-btn');
+    function closeGeo() { geoModal.classList.remove('show'); }
+    if (closeBtn) closeBtn.addEventListener('click', closeGeo);
+    if (okBtn) okBtn.addEventListener('click', closeGeo);
+    geoModal.addEventListener('click', function(e) {
+      if (e.target === geoModal) closeGeo();
+    });
+  }
+
   // ============ KARTEN-REGISTRY (für Card-Klicks die auf Pins fokussieren) ============
   var mapRegistry = {};
 
@@ -247,54 +335,75 @@
     var accuracyCircle = null;
     var btn = document.getElementById(config.btnId);
 
+    function showUserLocation(lat, lng, accuracy) {
+      if (userMarker) map.removeLayer(userMarker);
+      if (accuracyCircle) map.removeLayer(accuracyCircle);
+      var youIcon = L.divIcon({
+        className: '',
+        html: '<div class="you-marker"></div>',
+        iconSize: [22, 22],
+        iconAnchor: [11, 11]
+      });
+      userMarker = L.marker([lat, lng], { icon: youIcon }).addTo(map);
+      userMarker.bindPopup('<div class="popup"><span class="popup-tag point">Du</span><h4>Dein Standort</h4><p>Genauigkeit: ±' + Math.round(accuracy) + ' m</p></div>');
+      accuracyCircle = L.circle([lat, lng], {
+        radius: accuracy,
+        color: '#94B8D0',
+        fillColor: '#94B8D0',
+        fillOpacity: 0.1,
+        weight: 1
+      }).addTo(map);
+      map.setView([lat, lng], 15);
+    }
+
+    function requestLocation(onSuccess, onError) {
+      if (!navigator.geolocation) {
+        onError({ code: -1, message: 'Browser unterstützt keine Geolocation' });
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        function(pos) { onSuccess(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy); },
+        function(err) { onError(err); },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
     if (btn) {
       btn.addEventListener('click', function() {
-        if (!navigator.geolocation) {
-          alert('Geolokalisierung wird von deinem Browser nicht unterstützt.');
-          return;
-        }
         btn.classList.add('active');
         var btnLabel = btn.querySelector('span');
         if (btnLabel) btnLabel.textContent = 'Suche...';
 
-        navigator.geolocation.getCurrentPosition(
-          function(pos) {
-            var lat = pos.coords.latitude;
-            var lng = pos.coords.longitude;
-            var accuracy = pos.coords.accuracy;
+        function resetBtn() {
+          if (btnLabel) btnLabel.textContent = 'Wo bin ich?';
+          btn.classList.remove('active');
+        }
 
-            if (userMarker) map.removeLayer(userMarker);
-            if (accuracyCircle) map.removeLayer(accuracyCircle);
-
-            var youIcon = L.divIcon({
-              className: '',
-              html: '<div class="you-marker"></div>',
-              iconSize: [22, 22],
-              iconAnchor: [11, 11]
-            });
-            userMarker = L.marker([lat, lng], { icon: youIcon }).addTo(map);
-            userMarker.bindPopup('<div class="popup"><span class="popup-tag point">Du</span><h4>Dein Standort</h4><p>Genauigkeit: ±' + Math.round(accuracy) + ' m</p></div>');
-            accuracyCircle = L.circle([lat, lng], {
-              radius: accuracy,
-              color: '#94B8D0',
-              fillColor: '#94B8D0',
-              fillOpacity: 0.1,
-              weight: 1
-            }).addTo(map);
-            map.setView([lat, lng], 15);
-
+        requestLocation(
+          function(lat, lng, accuracy) {
+            showUserLocation(lat, lng, accuracy);
             if (btnLabel) btnLabel.textContent = 'Standort aktualisiert';
-            setTimeout(function() {
-              if (btnLabel) btnLabel.textContent = 'Wo bin ich?';
-              btn.classList.remove('active');
-            }, 2500);
+            setTimeout(resetBtn, 2500);
           },
           function(err) {
-            alert('Standort konnte nicht ermittelt werden.\n\nMögliche Ursachen:\n• Berechtigung verweigert\n• Kein GPS-Signal\n• Browser im Privat-Modus\n• Seite läuft nicht via HTTPS');
-            if (btnLabel) btnLabel.textContent = 'Wo bin ich?';
-            btn.classList.remove('active');
-          },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            resetBtn();
+            // Zentrale Geo-Help-Funktion anzeigen (lebt ausserhalb von buildMap)
+            if (window.showGeoHelp) {
+              window.showGeoHelp(err, function() {
+                // Retry-Callback: nochmal versuchen
+                btn.classList.add('active');
+                if (btnLabel) btnLabel.textContent = 'Suche...';
+                requestLocation(
+                  function(lat, lng, accuracy) {
+                    showUserLocation(lat, lng, accuracy);
+                    if (btnLabel) btnLabel.textContent = 'Standort aktualisiert';
+                    setTimeout(resetBtn, 2500);
+                  },
+                  function(err2) { resetBtn(); window.showGeoHelp && window.showGeoHelp(err2); }
+                );
+              });
+            }
+          }
         );
       });
     }

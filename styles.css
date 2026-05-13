@@ -41,25 +41,25 @@ h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; line-height: 1.1; letter-spa
 .topbar {
   background: var(--lime);
   color: var(--ink);
-  padding: 0.3rem 1rem;
+  padding: 0.15rem 0.9rem;
   position: relative;
   z-index: 10;
 }
 .topbar-inner {
   max-width: 1200px; margin: 0 auto;
-  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 0.8rem;
 }
-.topbar-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.92rem; letter-spacing: -0.02em; line-height: 1.05; }
-.topbar-title small { display: block; font-weight: 400; font-size: 0.65rem; opacity: 0.7; margin-top: 0.02rem; }
-.topbar-actions { display: flex; align-items: center; gap: 0.4rem; }
-.gbs-logo-img { height: 26px; width: auto; display: block; }
+.topbar-title { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.82rem; letter-spacing: -0.02em; line-height: 1; }
+.topbar-title small { display: block; font-weight: 400; font-size: 0.6rem; opacity: 0.7; margin-top: 0.02rem; }
+.topbar-actions { display: flex; align-items: center; gap: 0.35rem; }
+.gbs-logo-img { height: 22px; width: auto; display: block; }
 
 .refresh-btn {
   background: var(--ink);
   color: var(--lime);
   border: none;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -69,7 +69,7 @@ h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; line-height: 1.1; letter-spa
   flex-shrink: 0;
 }
 .refresh-btn:hover { background: var(--accent); color: white; transform: scale(1.05); }
-.refresh-btn svg { width: 13px; height: 13px; }
+.refresh-btn svg { width: 11px; height: 11px; }
 .refresh-btn.spinning svg { animation: refresh-spin 0.7s linear infinite; }
 @keyframes refresh-spin {
   from { transform: rotate(0deg); }
@@ -81,22 +81,22 @@ h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; line-height: 1.1; letter-spa
   background: var(--ink);
   color: var(--lime);
   border: none;
-  height: 28px;
-  padding: 0 0.65rem;
+  height: 24px;
+  padding: 0 0.55rem;
   border-radius: 100px;
   cursor: pointer;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.25rem;
   transition: all 0.2s;
   flex-shrink: 0;
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
-  font-size: 0.72rem;
+  font-size: 0.66rem;
   display: none;
 }
 .install-btn.available { display: inline-flex; }
 .install-btn:hover { background: var(--accent); color: white; transform: translateY(-1px); }
-.install-btn svg { width: 12px; height: 12px; }
+.install-btn svg { width: 11px; height: 11px; }
 
 /* ====== HERO ====== */
 .hero {
@@ -207,32 +207,213 @@ h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; line-height: 1.1; letter-spa
 .photo-circle.p2 { width: 80px; height: 80px; top: 80px; left: 0; transform: rotate(5deg); background: linear-gradient(135deg, #E58A3E, #C99B47); }
 .photo-circle.p3 { width: 100px; height: 100px; bottom: 0; right: 0; background: linear-gradient(135deg, #94B8D0, #1F3A56); }
 
-/* ====== ALERT BANNER — kompakter, dezenter ====== */
-.alert-wrap { padding: 1rem 1.5rem; background: var(--paper); }
-.alert {
-  max-width: 1100px;
-  margin: 0 auto;
+/* ====== HOLIDAY HINT — kompakt, klickbar ====== */
+.holiday-hint-wrap { padding: 0.6rem 1.5rem 0.4rem; background: var(--paper); display: flex; justify-content: center; }
+.holiday-hint {
   background: #FCE8E5;
-  color: var(--ink);
-  padding: 0.9rem 1.2rem;
-  border-radius: 12px;
+  border: 1.5px solid rgba(216, 86, 71, 0.3);
   border-left: 4px solid var(--accent);
-  display: flex; gap: 0.9rem; align-items: flex-start;
+  border-radius: 100px;
+  padding: 0.35rem 0.9rem 0.35rem 0.45rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Outfit', sans-serif;
 }
-.alert-icon {
+.holiday-hint:hover { background: #FBD9D4; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(216, 86, 71, 0.2); }
+.holiday-hint-icon {
+  width: 22px; height: 22px;
+  background: var(--accent);
+  color: white;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 0.82rem;
   flex-shrink: 0;
-  width: 30px; height: 30px;
+}
+.holiday-hint-label {
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--accent);
+}
+
+/* ====== HOLIDAY MODAL ====== */
+.holiday-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 58, 86, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 10002;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.holiday-modal.show { display: flex; animation: welcomeFadeIn 0.3s ease-out; }
+.holiday-modal-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem 1.8rem 1.5rem;
+  max-width: 460px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.4);
+  border-top: 6px solid var(--accent);
+  animation: welcomeSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.holiday-modal-close {
+  position: absolute;
+  top: 0.6rem; right: 0.8rem;
+  background: transparent;
+  border: none;
+  font-size: 1.7rem;
+  color: var(--ink);
+  cursor: pointer;
+  opacity: 0.5;
+  width: 32px; height: 32px;
+  line-height: 1;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.holiday-modal-close:hover { opacity: 1; background: rgba(0,0,0,0.05); }
+.holiday-modal-icon {
+  width: 44px; height: 44px;
   background: var(--accent);
   color: white;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-family: 'Outfit', sans-serif;
   font-weight: 800;
-  font-size: 1rem;
+  font-size: 1.4rem;
+  margin-bottom: 0.9rem;
 }
-.alert h3 { font-size: 0.95rem; margin-bottom: 0.15rem; font-weight: 700; color: var(--accent); }
-.alert p { font-size: 0.85rem; line-height: 1.45; opacity: 0.9; }
-.alert strong { font-weight: 700; }
+.holiday-modal-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+.holiday-modal-card p {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink);
+  opacity: 0.85;
+  margin-bottom: 1.4rem;
+}
+.holiday-modal-ok {
+  width: 100%;
+  background: var(--ink);
+  color: var(--lime);
+  border: none;
+  padding: 0.85rem;
+  border-radius: 100px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.holiday-modal-ok:hover { background: var(--lime); color: var(--ink); }
+
+/* ====== GEOLOCATION HELP MODAL ====== */
+.geo-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 58, 86, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 10003;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.geo-modal.show { display: flex; animation: welcomeFadeIn 0.3s ease-out; }
+.geo-modal-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.8rem 1.6rem 1.4rem;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.4);
+  border-top: 6px solid var(--sky-deep);
+  animation: welcomeSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.geo-modal-close {
+  position: absolute;
+  top: 0.6rem; right: 0.8rem;
+  background: transparent;
+  border: none;
+  font-size: 1.7rem;
+  color: var(--ink);
+  cursor: pointer;
+  opacity: 0.5;
+  width: 32px; height: 32px;
+  line-height: 1;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+.geo-modal-close:hover { opacity: 1; background: rgba(0,0,0,0.05); }
+.geo-modal-icon { font-size: 2.4rem; margin-bottom: 0.6rem; line-height: 1; }
+.geo-modal-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+.geo-modal-card p { font-size: 0.9rem; line-height: 1.5; color: var(--ink); opacity: 0.85; margin-bottom: 1rem; }
+.geo-modal-steps {
+  list-style: none;
+  counter-reset: geo;
+  margin: 0.7rem 0 1.2rem;
+  background: var(--paper);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+}
+.geo-modal-steps li {
+  counter-increment: geo;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 0.6rem;
+  padding: 0.4rem 0;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+.geo-modal-steps li::before {
+  content: counter(geo);
+  background: var(--sky-deep);
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.geo-modal-tabs { display: none; }
+.geo-tab-content { display: none; }
+.geo-tab-content.active { display: block; }
+.geo-modal-details { display: block; }
+.geo-modal-ok {
+  background: var(--ink);
+  color: var(--lime);
+  border: none;
+  padding: 0.85rem 1rem;
+  border-radius: 100px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.geo-modal-ok:hover { background: var(--lime); color: var(--ink); }
 
 /* ====== STICKY NAV ====== */
 .nav-sticky {
@@ -1184,14 +1365,15 @@ footer .mono-small { color: rgba(255,255,255,0.5); margin-top: 1.5rem; display: 
 .pwa-install-banner #pwa-dismiss-btn:hover { color: white; background: rgba(255,255,255,0.1); }
 
 @media (max-width: 520px) {
-  .refresh-btn { width: 26px; height: 26px; }
-  .refresh-btn svg { width: 12px; height: 12px; }
-  .install-btn { height: 26px; padding: 0 0.55rem; font-size: 0.68rem; gap: 0.22rem; }
-  .install-btn svg { width: 11px; height: 11px; }
-  .topbar-actions { gap: 0.3rem; }
-  .gbs-logo-img { height: 24px; }
-  .topbar-title { font-size: 0.8rem; }
-  .topbar-title small { font-size: 0.58rem; }
+  .refresh-btn { width: 22px; height: 22px; }
+  .refresh-btn svg { width: 10px; height: 10px; }
+  .install-btn { height: 22px; padding: 0 0.5rem; font-size: 0.62rem; gap: 0.2rem; }
+  .install-btn svg { width: 10px; height: 10px; }
+  .topbar-actions { gap: 0.25rem; }
+  .gbs-logo-img { height: 20px; }
+  .topbar-title { font-size: 0.72rem; }
+  .topbar-title small { font-size: 0.55rem; }
+  .topbar { padding: 0.12rem 0.7rem; }
   .update-banner { bottom: 0.5rem; left: 0.5rem; right: 0.5rem; padding: 0.7rem 1rem; }
   .update-content strong { font-size: 0.88rem; }
   .update-content span { font-size: 0.75rem; }
