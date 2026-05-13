@@ -131,48 +131,41 @@
     }
   });
 
-  // ============ PWA INSTALL BANNER ============
-  // Android Chrome: zeigt "beforeinstallprompt"-Event, dann kann man den Install-Dialog auslösen.
-  // iOS Safari: kein API, aber wir können einen freundlichen Hinweis anzeigen.
+  // ============ PWA INSTALL — Button in der Topbar ============
+  // Android Chrome (und andere unterstützte Browser) feuern beforeinstallprompt.
+  // Wir fangen das Event ab, blenden den Topbar-Button ein, und triggern es per Klick.
+  // Auf iOS gibt es kein Event → Button bleibt unsichtbar (Apple lässt das nicht zu).
   var deferredPrompt = null;
-  var installBanner = document.getElementById('pwa-install-banner');
-  var installBtn = document.getElementById('pwa-install-btn');
-  var dismissBtn = document.getElementById('pwa-dismiss-btn');
-
-  var dismissedKey = 'pwa-install-dismissed';
+  var topbarInstallBtn = document.getElementById('install-btn');
   var alreadyInstalled = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
-  if (!alreadyInstalled && installBanner && !localStorage.getItem(dismissedKey)) {
+  if (!alreadyInstalled && topbarInstallBtn) {
     window.addEventListener('beforeinstallprompt', function(e) {
       e.preventDefault();
       deferredPrompt = e;
-      installBanner.classList.add('show');
-      if (installBtn) installBtn.style.display = 'inline-flex';
+      // Button entfernen hidden + zeigen
+      topbarInstallBtn.hidden = false;
+      topbarInstallBtn.classList.add('available');
     });
 
-    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    if (isIOS) {
-      setTimeout(function() {
-        installBanner.classList.add('show', 'ios');
-      }, 3000);
-    }
-  }
-
-  if (installBtn) {
-    installBtn.addEventListener('click', function() {
+    topbarInstallBtn.addEventListener('click', function() {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function() {
+      deferredPrompt.userChoice.then(function(choice) {
+        if (choice.outcome === 'accepted') {
+          // Erfolgreich installiert → Button verschwindet
+          topbarInstallBtn.classList.remove('available');
+          topbarInstallBtn.hidden = true;
+        }
         deferredPrompt = null;
-        installBanner.classList.remove('show');
       });
     });
-  }
 
-  if (dismissBtn) {
-    dismissBtn.addEventListener('click', function() {
-      installBanner.classList.remove('show');
-      localStorage.setItem(dismissedKey, '1');
+    // Wenn die App tatsächlich installiert wurde
+    window.addEventListener('appinstalled', function() {
+      topbarInstallBtn.classList.remove('available');
+      topbarInstallBtn.hidden = true;
+      deferredPrompt = null;
     });
   }
 
@@ -418,7 +411,7 @@
         link:'https://www.koelntourismus.de/sehen-erleben/koelner-altstadt' },
       { lat: 50.9503, lng: 6.9144, type:'point', name:'Streetart Ehrenfeld',
         tag:'Fr Nm STREETART', desc:'Bahnhof Ehrenfeld und Heliosstraße. Geprägt vom CityLeaks-Festival.', num:'★',
-        link:'https://cityleaks.de/' },
+        link:'https://www.koelntourismus.de/kunst-kultur/street-art' },
       { lat: 50.9355839, lng: 6.9521362, type:'reserved', name:"Bei d'r Tant", major: true,
         tag:'Fr ab 18:00 RESERVIERT', desc:'Cäcilienstr. 28. Traditionsgaststätte. Kölsch vom Fass, rheinische Küche.', num:'T',
         link:'https://beidrtant.de/' }

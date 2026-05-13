@@ -6,7 +6,7 @@
    Das löst automatisch ein Update bei allen Nutzern aus.
    ========================================================= */
 
-const CACHE_VERSION = 'gbs-reise-v9';
+const CACHE_VERSION = 'gbs-reise-v10';
 
 // Diese Dateien werden bei der Installation gecacht (Offline-Basis)
 const FILES_TO_CACHE = [
