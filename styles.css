@@ -3,8 +3,8 @@
    ========================================================= */
 
 :root {
-  --lime: #B8D649;
-  --lime-dark: #9CBA2B;
+  --lime: #C6D300;
+  --lime-dark: #A8B500;
   --sky: #C8DFEE;
   --sky-light: #E3EEF6;
   --sky-deep: #94B8D0;
@@ -90,7 +90,7 @@ h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; line-height: 1.1; letter-spa
   pointer-events: none;
 }
 .hero::before {
-  background: radial-gradient(circle, rgba(184,214,73,0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(198,211,0,0.25) 0%, transparent 70%);
   width: 400px; height: 400px;
   top: -100px; right: -100px;
 }
@@ -243,7 +243,7 @@ h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; line-height: 1.1; letter-spa
   color: var(--ink);
   font-weight: 700;
   margin-right: 0.5rem;
-  box-shadow: 0 4px 12px rgba(184, 214, 73, 0.4);
+  box-shadow: 0 4px 12px rgba(198, 211, 0, 0.4);
 }
 .nav-link-primary:hover { background: var(--ink); color: var(--lime); }
 
@@ -834,7 +834,10 @@ body.has-fullscreen-map { overflow: hidden; }
   padding: 1.8rem;
   margin: 2rem 0;
   position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
+.reservation[data-map-focus] { cursor: pointer; }
+.reservation[data-map-focus]:hover { transform: translateY(-3px); box-shadow: 0 14px 36px rgba(216, 86, 71, 0.2); }
 .reservation::before {
   content: '✓ reserviert';
   position: absolute;
@@ -853,6 +856,18 @@ body.has-fullscreen-map { overflow: hidden; }
 .reservation .res-meta div { font-size: 0.88rem; }
 .reservation .res-meta strong { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--accent); display: block; font-size: 0.95rem; }
 .reservation .res-note { font-size: 0.88rem; opacity: 0.75; margin-top: 0.8rem; line-height: 1.5; }
+.res-map-hint {
+  display: block;
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px dashed var(--hairline);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  transition: color 0.2s;
+}
+.reservation[data-map-focus]:hover .res-map-hint { color: var(--ink); }
 
 /* ====== TIMELINE für Qomo Abend ====== */
 .evening-flow {
@@ -950,7 +965,7 @@ body.has-fullscreen-map { overflow: hidden; }
   position: absolute;
   top: -30%; right: -20%;
   width: 200px; height: 200px;
-  background: radial-gradient(circle, rgba(184,214,73,0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(198,211,0,0.2) 0%, transparent 70%);
   pointer-events: none;
 }
 .nightlife-tag {
@@ -969,7 +984,7 @@ body.has-fullscreen-map { overflow: hidden; }
 .nightlife-card .card-hint {
   margin-top: 0.8rem;
   padding-top: 0.6rem;
-  border-top: 1px dashed rgba(184, 214, 73, 0.3);
+  border-top: 1px dashed rgba(198, 211, 0, 0.3);
   font-family: 'Outfit', sans-serif;
   font-size: 0.78rem;
   font-weight: 600;
@@ -997,48 +1012,66 @@ body.has-fullscreen-map { overflow: hidden; }
 .insider-section .section-lead { color: #F0F4F8; opacity: 0.9; }
 .insider-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.3rem;
 }
 .insider-card {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: 18px;
-  padding: 1.6rem;
-  transition: background 0.2s, border-color 0.2s;
+  padding: 1.8rem 1.5rem 1.5rem;
+  transition: all 0.25s;
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
 }
-.insider-card:hover { background: rgba(184,214,73,0.12); border-color: rgba(184,214,73,0.4); }
+.insider-card:hover {
+  background: rgba(198,211,0,0.12);
+  border-color: rgba(198,211,0,0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.25);
+}
+.insider-card-icon {
+  font-size: 2.6rem;
+  line-height: 1;
+  margin-bottom: 0.9rem;
+  display: block;
+  transition: transform 0.3s;
+}
+.insider-card:hover .insider-card-icon { transform: scale(1.15) rotate(-5deg); }
 .insider-card h4 {
   font-family: 'Caveat', cursive;
-  font-size: 1.7rem;
+  font-size: 1.65rem;
   color: var(--lime);
-  margin-bottom: 0.7rem;
+  margin-bottom: 0.5rem;
   line-height: 1.1;
 }
 .insider-card p {
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.88rem;
+  line-height: 1.5;
   color: #F0F4F8;
   flex: 1;
+  opacity: 0.9;
 }
 .insider-card p strong { color: var(--lime); font-weight: 700; }
-.insider-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  margin-top: 1rem;
-  padding-top: 0.8rem;
-  border-top: 1px dashed rgba(255,255,255,0.2);
-  color: var(--lime);
-  text-decoration: none;
+.insider-card-arrow {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
   font-family: 'Outfit', sans-serif;
-  font-weight: 600;
-  font-size: 0.85rem;
-  transition: color 0.2s;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: rgba(198,211,0,0.4);
+  transition: all 0.25s;
 }
-.insider-link:hover { color: white; text-decoration: underline; }
+.insider-card:hover .insider-card-arrow {
+  color: var(--lime);
+  transform: translate(3px, -3px);
+}
 
 /* ====== FOOTER ====== */
 footer {

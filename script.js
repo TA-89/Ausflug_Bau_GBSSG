@@ -395,7 +395,7 @@
         link:'https://www.fuechschen.de/' },
       { lat: 51.2284918, lng: 6.7705631, type:'tour-b', name:'Rheinuferpromenade',
         tag:'Tour B · 18:00', desc:'1995 von Niklaus Fritschi gestaltet. Autofrei, 1,5 km bis zum Rheinturm.', num:'6',
-        link:'https://de.wikipedia.org/wiki/Rheinuferpromenade_(D%C3%BCsseldorf)' }
+        link:'https://de.wikipedia.org/wiki/Rheinuferpromenade' }
     ]
   });
 
@@ -438,16 +438,16 @@
         link:'https://beidrtant.de/' },
       { lat: 50.9355, lng: 6.9385, type:'nightlife', name:'Rudolfplatz / Friesenviertel', major: true,
         tag:'AUSGEHVIERTEL', desc:'Klassisches Ausgehviertel. Bars, Pubs, kleine Clubs entlang Friesenstraße.', num:'1',
-        link:'https://de.wikipedia.org/wiki/Rudolfplatz_(K%C3%B6ln)' },
+        link:'https://www.koeln.de/leben/stadtteile/friesenviertel/' },
       { lat: 50.9357, lng: 6.9433, type:'nightlife', name:'Belgisches Viertel', major: true,
         tag:'HIPSTER & CRAFT', desc:'Brüsseler Platz und Umgebung. Craft Beer, Cocktailbars, Lieblings-Eckkneipen.', num:'2',
-        link:'https://de.wikipedia.org/wiki/Belgisches_Viertel' },
+        link:'https://www.koelntourismus.de/kunst-kultur/sehenswuerdigkeiten/detail/belgisches-viertel' },
       { lat: 50.9332, lng: 6.9523, type:'nightlife', name:'Heumarkt / Alter Markt', major: true,
         tag:'BRAUHÄUSER', desc:'Päffgen, Gaffel am Dom, Sünner im Walfisch — Kölsch direkt am Quell.', num:'3',
-        link:'https://www.paeffgen-koelsch.de/' },
+        link:'https://de.wikipedia.org/wiki/Heumarkt_(K%C3%B6ln)' },
       { lat: 50.9268, lng: 6.9527, type:'nightlife', name:'Südstadt (Severinsviertel)',
         tag:'GEMÜTLICH', desc:'Chilbi, Sünner Keller, das legendäre Lommerzheim (oft Schlange).', num:'4',
-        link:'https://lommi-koeln.de/' }
+        link:'https://www.koeln.de/leben/stadtteile/severinsviertel/' }
     ]
   });
 
